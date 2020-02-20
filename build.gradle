@@ -45,11 +45,12 @@ dependencies {
     
     annotationProcessor 'org.projectlombok:lombok'
     compileOnly 'org.projectlombok:lombok'
-    // https://mvnrepository.com/artifact/org.hibernate/hibernate-core
+ 
 	compile group: 'org.hibernate', name: 'hibernate-core', version: '5.4.12.Final'
-    // https://mvnrepository.com/artifact/org.hibernate/hibernate-entitymanager
 	compile group: 'org.hibernate', name: 'hibernate-entitymanager', version: '5.4.12.Final'
-    
+	
+	// JWT
+	implementation 'org.springframework.cloud:spring-cloud-starter-oauth2:2.1.2.RELEASE'
 }
 
 test {

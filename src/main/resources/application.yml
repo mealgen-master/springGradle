@@ -11,3 +11,8 @@ jpa:
    database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
    general-ddl: true
    show-sql: truuuu
+security:
+   oauth:
+      authorization:
+         check-token-access: isAuthenticated()
+## security: JWT 블록 - isAuthenticated() 인증되었는지 여부
