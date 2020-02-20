@@ -1,0 +1,13 @@
+server:
+   port: 8080
+spring:
+   datasource:
+      drive-class-name: com.mysql.cj.jdbc.Driver
+      url: jdbc:mysql://localhost:3306/sys?serverTimezone=UTC&characterEncoding=UTF-8
+      username: root
+      password: kjsh22887!
+jpa:
+   database: mysql
+   database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
+   general-ddl: true
+   show-sql: truuuu
