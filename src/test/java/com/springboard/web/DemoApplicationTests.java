@@ -3,6 +3,7 @@ package com.springboard.web;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.httpBasic;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import java.util.ArrayList;
@@ -16,6 +17,8 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.security.oauth2.common.util.Jackson2JsonParser;
 import org.springframework.security.oauth2.common.util.JacksonJsonParser;
@@ -57,16 +60,19 @@ public class DemoApplicationTests {
 	}
 	
 	private String getBearerToken () throws Exception {
+		System.out.println("강진희 가 감지했다 getBearerToken 함수를 ");
         return "Bearer " + getToken();
     }
-
+	// Bearer
+	MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
+	
+			
     private String getToken () throws Exception {
         final String USER_NAME = "puppee9@gmail.com";
         final String PASSWORD = "june";
         // httpBasic 메서드를 사용하여 basicOauth 헤더를 만듬
-        final String CLIENT_ID = "a05e1610-6c6c-4b52-9eea-b7a5827179f1";
-        final String CLIENT_SECRET = "8e4dd445-13c1-4c23-abb1-e939be0d51ec";
-
+        final String CLIENT_ID = "testClientId";
+        final String CLIENT_SECRET = "testSecret";
         // given
         List<UserRole> roles = new ArrayList<>();
         UserRole userRole = new UserRole();
@@ -80,13 +86,20 @@ public class DemoApplicationTests {
                 .userRoles(roles)
                 .build();
         userService.setUserData(account);
+        
+        params.add("grant_type", "password");
+        params.add("client_id", "fooClientIdPassword");
+        params.add("username", USER_NAME);
+        params.add("password", PASSWORD);
 
         ResultActions perform = this.mockmvc.perform(post("/oauth/token")
                 .with(httpBasic(CLIENT_ID, CLIENT_SECRET)) // httpBasic 사용시 test dependency 필요
-                .param("username", USER_NAME)
-                .param("password", PASSWORD)
-                .param("grant_type", "password")
-        );
+                .params(params)
+                .accept("application/json;charset=UTF-8"))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType("application/json;charset=UTF-8"));
+        
+        System.out.println("강진희 가 감지했다 getToken 함수를 ");
         MockHttpServletResponse response = perform.andReturn().getResponse();
         Jackson2JsonParser parser = new Jackson2JsonParser();
         String contentAsString = response.getContentAsString();
@@ -101,11 +114,10 @@ public class DemoApplicationTests {
 		params.add("강진희도전", "client_credentials");
 		System.out.println("강진희 가 감지했다 ");
 //		ResultActions result = mockmvc.perform(get("/api/selectUser").params(params).with(httpBasic("open_api_key2","waug_secret2"))
-		ResultActions result = mockmvc.perform(post("/api/events")
-                .contentType(MediaType.APPLICATION_JSON_UTF8)
-                .accept(MediaTypes.HAL_JSON_UTF8)
-                .content(eventJsonString)
-                .header(HttpHeaders.AUTHORIZATION, getBearerToken()));
+		ResultActions result = mockmvc.perform(get("/api/address")
+				.header("Authorization", "Bearer " + getBearerToken())
+			     .param("address2", "농심"))
+			     .andExpect(status().isForbidden());
 //				.accept("application/json;charset=UTF-8")).andExpect(status().isOk()).andExpect(content().contentType("application/json;charset=UTF-8"));
 		System.out.println("강진희 가 감지했다 22222222222222222" + result);
 		String resultString = result.andReturn().getResponse().getContentAsString();

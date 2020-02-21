@@ -50,7 +50,16 @@ dependencies {
 	compile group: 'org.hibernate', name: 'hibernate-entitymanager', version: '5.4.12.Final'
 	
 	// JWT
-	implementation 'org.springframework.cloud:spring-cloud-starter-oauth2:2.1.2.RELEASE'
+	implementation 'org.springframework.cloud:spring-cloud-starter-security:2.1.2.RELEASE'
+    implementation 'org.springframework.cloud:spring-cloud-starter-oauth2:2.1.2.RELEASE'
+    
+    // https://mvnrepository.com/artifact/org.springframework.security/spring-security-oauth2-client
+	compile group: 'org.springframework.security', name: 'spring-security-oauth2-client', version: '5.2.2.RELEASE'
+
+    
+
+	
+	
 }
 
 test {

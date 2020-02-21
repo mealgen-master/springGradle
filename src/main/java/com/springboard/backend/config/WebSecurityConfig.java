@@ -3,6 +3,7 @@ package com.springboard.backend.config;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 // 인증매니저빌더?
@@ -10,7 +11,7 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
 // crypto = 암호
 
@@ -27,10 +28,22 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter{
 	@Autowired
 	UserDetailsServiceImpl userDetailsServiceImpl;
 	
+//	@Bean
+//	PasswordEncoder getEncoder() {
+//	    return new BCryptPasswordEncoder();
+//	}
+	
+	@Override
+    @Bean
+    public AuthenticationManager authenticationManagerBean() throws Exception {
+        return super.authenticationManagerBean();
+    }
+	
+	
 	@Bean
-	PasswordEncoder getEncoder() {
-	    return new BCryptPasswordEncoder();
-	}
+    public PasswordEncoder getEncoder() {
+        return PasswordEncoderFactories.createDelegatingPasswordEncoder();
+    }
 	
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
@@ -39,8 +52,11 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter{
 		http.httpBasic();
 		
 		http.authorizeRequests()
-			.antMatchers("/api/selectUser**").authenticated()
-			.anyRequest().permitAll();
+			.antMatchers("/oauth/**", "/oauth2/callback", "/h2-console/*").permitAll()
+			.and()
+			.formLogin();
+//			.antMatchers("/api/selectUser**").authenticated()
+//			.anyRequest().permitAll();
 
 			// .antMatchers("/api/selectUser**").hasRole("ADMIN")
 			// .anyRequest().permitAll();
@@ -57,7 +73,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter{
 	@Override
 	protected void configure(AuthenticationManagerBuilder auth) throws AuthenticationException {	
 			try {
-				auth.userDetailsService(userDetailsServiceImpl).passwordEncoder(getEncoder());
+				auth.userDetailsService(userDetailsServiceImpl).passwordEncoder(getEncoder());	
+			System.out.println("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$");
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();

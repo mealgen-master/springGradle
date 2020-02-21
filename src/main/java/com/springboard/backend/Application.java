@@ -7,7 +7,7 @@ import org.springframework.security.oauth2.config.annotation.web.configuration.E
 
 //@EnableResourceServer
 // 리소스서버 사용을 가능하게
-@EnableAuthorizationServer
+//@EnableAuthorizationServer
 // 인증서버 사용을 가능하게
 @SpringBootApplication
 public class Application {
