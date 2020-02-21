@@ -14,6 +14,7 @@ public class Oauth2Config {
 	@Bean
 	public TokenStore jdbcTokenStore(DataSource datasource) {
 		return new JdbcTokenStore(datasource);
+		// jdbcTokenStore.java => jdbcTemplate.java에 상속메소드를 통해 dataSource 정보를 저장
 	}
 	
 	public JdbcClientDetailsService jdbcClientDetailsService(DataSource datasource) {

@@ -20,7 +20,7 @@ public class UserRole {
 	public enum Role {
 		ADMIN, USER
 	}
-	
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;

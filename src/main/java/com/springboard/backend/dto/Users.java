@@ -8,13 +8,20 @@ import javax.persistence.OneToMany;
 
 import com.springboard.backend.model.UserRole;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -26,9 +33,13 @@ import javax.persistence.GeneratedValue;
 @Setter
 @Entity
 @ToString
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 @EqualsAndHashCode(of = "uid")
 public class Users {
 	
+
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	@Column(unique = true)
