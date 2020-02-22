@@ -14,8 +14,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
-import org.springframework.web.bind.annotation.ControllerAdvice;
-import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -59,6 +57,9 @@ public class UserController {
 	private Iterable<Users> address2(@RequestParam(name="address2") String address) {
 		return userService.selectAllList();
 	};
+	
+//	@Autowired
+//	PasswordEncoder passwordEncoder;
 	
 	@GetMapping("/api/addUser")
 	private String addUser(

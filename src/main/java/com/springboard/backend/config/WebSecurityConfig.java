@@ -4,13 +4,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 // 인증매니저빌더?
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
 // crypto = 암호
@@ -40,10 +40,10 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter{
     }
 	
 	
-	@Bean
-    public PasswordEncoder getEncoder() {
-        return PasswordEncoderFactories.createDelegatingPasswordEncoder();
-    }
+//	@Bean
+//    public PasswordEncoder getEncoder() {
+//        return PasswordEncoderFactories.createDelegatingPasswordEncoder();
+//    }
 	
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
@@ -52,11 +52,11 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter{
 		http.httpBasic();
 		
 		http.authorizeRequests()
-			.antMatchers("/oauth/**", "/oauth2/callback", "/h2-console/*").permitAll()
-			.and()
-			.formLogin();
+//			.antMatchers("/oauth/**", "/oauth2/callback", "/h2-console/*", "/api/addUser**").permitAll()
+//			.and()
+//			.formLogin();
 //			.antMatchers("/api/selectUser**").authenticated()
-//			.anyRequest().permitAll();
+			.anyRequest().permitAll();
 
 			// .antMatchers("/api/selectUser**").hasRole("ADMIN")
 			// .anyRequest().permitAll();
@@ -71,15 +71,22 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter{
 	} 
 	
 	@Override
-	protected void configure(AuthenticationManagerBuilder auth) throws AuthenticationException {	
-			try {
-				auth.userDetailsService(userDetailsServiceImpl).passwordEncoder(getEncoder());	
-			System.out.println("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$");
-			} catch (Exception e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-				throw new BadCredentialsException("very bad");
-			}	
+	protected void configure(AuthenticationManagerBuilder auth) throws Exception {	
+
+		BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+//		try {
+			auth.userDetailsService(userDetailsServiceImpl).passwordEncoder(passwordEncoder);	
+//		System.out.println("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$");
+//		} catch (Exception e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//			throw new BadCredentialsException("very bad");
+//		}
+		
+//		auth.inMemoryAuthentication()
+//			.withUser("user").password("{noop}password").roles("USER")
+//			.and()
+//			.withUser("admin").password("{noop}password").roles("ADMIN");
 	}
 	
 	// protected : 패키지 내에서만 공유
