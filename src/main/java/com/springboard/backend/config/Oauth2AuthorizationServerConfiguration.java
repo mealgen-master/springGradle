@@ -1,5 +1,7 @@
 package com.springboard.backend.config;
 
+import javax.sql.DataSource;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -12,6 +14,7 @@ import org.springframework.security.oauth2.config.annotation.web.configurers.Aut
 import org.springframework.security.oauth2.provider.token.DefaultAccessTokenConverter;
 import org.springframework.security.oauth2.provider.token.TokenStore;
 import org.springframework.security.oauth2.provider.token.store.InMemoryTokenStore;
+import org.springframework.security.oauth2.provider.token.store.JdbcTokenStore;
 
 import com.springboard.backend.service.UserDetailsServiceImpl;
 
@@ -38,18 +41,31 @@ public class Oauth2AuthorizationServerConfiguration extends AuthorizationServerC
 	@Autowired
 	UserDetailsServiceImpl userDetailsServiceImpl;
 
-	@Override
-	public void configure(ClientDetailsServiceConfigurer clients) throws Exception {
-		clients.inMemory().withClient("testClientId").secret(passwordEncoder.encode("testSecret"))
-		// inMemory에 저장된 값과 
-				.redirectUris("http://localhost:8080/oauth2/callback").authorizedGrantTypes("authorization_code")
-				.scopes("read", "write").accessTokenValiditySeconds(30000);
-	}
+	@Autowired
+	private DataSource datasource;
 	
 	@Override
+	public void configure(ClientDetailsServiceConfigurer clients) throws Exception {
+		clients.jdbc(datasource).passwordEncoder(passwordEncoder);
+		
+//		System.out.print(String.format("Client Secret  : %s ", passwordEncoder.encode("testSecret")));
+//		clients.inMemory().withClient("testClientId").secret(passwordEncoder.encode("testSecret"))
+//		// inMemory에 저장된 값과 
+//				.redirectUris("http://localhost:8080/oauth2/callback").authorizedGrantTypes("authorization_code")
+//				.scopes("read", "write").accessTokenValiditySeconds(30000);
+	}
+
+	@Override
 	public void configure(AuthorizationServerEndpointsConfigurer endpoints) throws Exception {
+		
+		Oauth2Config oauth2Config = new Oauth2Config();
+//		endpoints.tokenStore(new JdbcTokenStore(datasource));
+//				.authenticationManager(authenticationManager)
+//				.userDetailsService(userDetailsServiceImpl);
+		
 		endpoints.tokenStore(tokenStore())
-				.authenticationManager(authenticationManager)
-				.userDetailsService(userDetailsServiceImpl);
+		.authenticationManager(authenticationManager)
+		.userDetailsService(userDetailsServiceImpl);
+
 	}
 }
