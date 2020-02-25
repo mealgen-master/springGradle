@@ -1,11 +1,26 @@
 package com.springboard.backend.dto;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.stream.Collectors;
+
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.springboard.backend.model.UserRole;
 
 import lombok.AllArgsConstructor;
@@ -16,19 +31,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-
-import javax.persistence.GenerationType;
-import javax.persistence.GeneratedValue;
-
 @Getter
 @Setter
 @Entity
@@ -37,7 +39,7 @@ import javax.persistence.GeneratedValue;
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(of = "uid")
-public class Users {
+public class Users implements UserDetails {
 	
 
 	@Id
@@ -64,6 +66,48 @@ public class Users {
 	@OneToMany(cascade=CascadeType.ALL, fetch=FetchType.EAGER)
 	// FetchType = 로딩 타입을 Eager 또는 lazy로 지정 == 즉시로딩/ 지연로딩
 	@JoinColumn(name="user_id")
+	@ElementCollection(fetch = FetchType.EAGER)
 	private List<UserRole> userRoles = new ArrayList<>();
+
+	@Override
+	public Collection<? extends GrantedAuthority> getAuthorities() {
+		return this.userRoles.stream().map( role -> new  SimpleGrantedAuthority(role.toString())).collect(Collectors.toList());
+	}
+
+	@JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+	@Override
+	public String getUsername() {
+		return this.username;
+	}
+
+	@JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+	@Override
+	public boolean isAccountNonExpired() {
+		return true;
+	}
+	
+	@JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+	@Override
+	public boolean isAccountNonLocked() {
+		return true;
+	}
+
+	@JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+	@Override
+	public boolean isCredentialsNonExpired() {
+		return true;
+	}
+
+	@JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+	@Override
+	public boolean isEnabled() {
+		return true;
+	}
+
+	@JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+	@Override
+	public String getPassword() {
+		return this.phonenumber;
+	}
 	
 }

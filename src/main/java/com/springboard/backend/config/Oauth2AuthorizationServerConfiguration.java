@@ -59,13 +59,13 @@ public class Oauth2AuthorizationServerConfiguration extends AuthorizationServerC
 	public void configure(AuthorizationServerEndpointsConfigurer endpoints) throws Exception {
 		
 		Oauth2Config oauth2Config = new Oauth2Config();
-//		endpoints.tokenStore(new JdbcTokenStore(datasource));
+		endpoints.tokenStore(new JdbcTokenStore(datasource));
 //				.authenticationManager(authenticationManager)
 //				.userDetailsService(userDetailsServiceImpl);
 		
-		endpoints.tokenStore(tokenStore())
-		.authenticationManager(authenticationManager)
-		.userDetailsService(userDetailsServiceImpl);
+//		endpoints.tokenStore(tokenStore())
+//		.authenticationManager(authenticationManager)
+//		.userDetailsService(userDetailsServiceImpl);
 
 	}
 }

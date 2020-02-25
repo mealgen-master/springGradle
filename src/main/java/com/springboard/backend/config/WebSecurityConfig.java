@@ -9,11 +9,7 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.factory.PasswordEncoderFactories;
-import org.springframework.security.crypto.password.PasswordEncoder;
-// crypto = 암호
 
 import com.springboard.backend.service.UserDetailsServiceImpl;
 
@@ -45,22 +41,29 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter{
 //        return PasswordEncoderFactories.createDelegatingPasswordEncoder();
 //    }
 	
+	@Autowired
+    private CustomAuthenticationProvider authenticationProvider;
+	
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
 		http.csrf().disable();
 		http.headers().frameOptions().disable();
 		http.httpBasic();
 		
-		http.authorizeRequests()
+		http
+				.csrf().disable()
+		        .headers().frameOptions().disable()
+		        .and()
+		        .authorizeRequests().antMatchers("/oauth/**", "/oauth/token", "/oauth2/callback", "/h2-console/*").permitAll()
+		        .and()
+		        .formLogin().and()
+		        .httpBasic();
+//			.authorizeRequests()
 //			.antMatchers("/oauth/**", "/oauth2/callback", "/h2-console/*", "/api/addUser**").permitAll()
 //			.and()
 //			.formLogin();
 //			.antMatchers("/api/selectUser**").authenticated()
-			.anyRequest().permitAll();
-
-			// .antMatchers("/api/selectUser**").hasRole("ADMIN")
-			// .anyRequest().permitAll();
-			// Admin권한을 가진 사람이 없을 때 해당 요청이 들어왔을 때 403 -> 권한에러 
+//			.anyRequest().permitAll();
 		
 		
 //		http
@@ -73,26 +76,13 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter{
 	@Override
 	protected void configure(AuthenticationManagerBuilder auth) throws Exception {	
 
-		BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-//		try {
-			auth.userDetailsService(userDetailsServiceImpl).passwordEncoder(passwordEncoder);	
-//		System.out.println("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$");
-//		} catch (Exception e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//			throw new BadCredentialsException("very bad");
-//		}
+//		BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+//		auth.userDetailsService(userDetailsServiceImpl).passwordEncoder(passwordEncoder);
+		auth.authenticationProvider(authenticationProvider);
 		
 //		auth.inMemoryAuthentication()
 //			.withUser("user").password("{noop}password").roles("USER")
 //			.and()
 //			.withUser("admin").password("{noop}password").roles("ADMIN");
 	}
-	
-	// protected : 패키지 내에서만 공유
-	/*
-	 	AuthenticationManagerBuilder 란?
-		auth.userDetailsService(userDetailsService) 부분에서 하는 일은?
-		DaoAuthenticationConfigurer 는 무엇인가?
-	 */
 }
