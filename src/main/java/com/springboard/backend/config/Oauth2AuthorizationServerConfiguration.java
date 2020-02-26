@@ -3,6 +3,7 @@ package com.springboard.backend.config;
 import javax.sql.DataSource;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -15,6 +16,7 @@ import org.springframework.security.oauth2.provider.token.DefaultAccessTokenConv
 import org.springframework.security.oauth2.provider.token.TokenStore;
 import org.springframework.security.oauth2.provider.token.store.InMemoryTokenStore;
 import org.springframework.security.oauth2.provider.token.store.JdbcTokenStore;
+import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenConverter;
 
 import com.springboard.backend.service.UserDetailsServiceImpl;
 
@@ -44,6 +46,18 @@ public class Oauth2AuthorizationServerConfiguration extends AuthorizationServerC
 	@Autowired
 	private DataSource datasource;
 	
+	@Bean
+	public JwtAccessTokenConverter jwtAccessTokenConverter() {
+//		return new JwtAccessTokenConverter();
+		JwtAccessTokenConverter converter = new JwtAccessTokenConverter();
+		converter.setSigningKey(signKey);
+		return converter;
+		
+	}
+	
+	@Value("${security.oauth2.jwt.signkey}")
+	private String signKey;
+	
 	@Override
 	public void configure(ClientDetailsServiceConfigurer clients) throws Exception {
 		clients.jdbc(datasource).passwordEncoder(passwordEncoder);
@@ -54,18 +68,24 @@ public class Oauth2AuthorizationServerConfiguration extends AuthorizationServerC
 //				.redirectUris("http://localhost:8080/oauth2/callback").authorizedGrantTypes("authorization_code")
 //				.scopes("read", "write").accessTokenValiditySeconds(30000);
 	}
-
+	
 	@Override
 	public void configure(AuthorizationServerEndpointsConfigurer endpoints) throws Exception {
 		
 		Oauth2Config oauth2Config = new Oauth2Config();
-		endpoints.tokenStore(new JdbcTokenStore(datasource));
+		
+		endpoints.accessTokenConverter(jwtAccessTokenConverter()).userDetailsService(userDetailsServiceImpl);
+		/************** Jwt 토큰 발급 ***************/
+//		endpoints.accessTokenConverter(jwtAccessTokenConverter());
+		/********************************************/
+//		endpoints.tokenStore(new JdbcTokenStore(datasource));
 //				.authenticationManager(authenticationManager)
 //				.userDetailsService(userDetailsServiceImpl);
 		
+		/************** Access 토큰 발급 ***************/
 //		endpoints.tokenStore(tokenStore())
 //		.authenticationManager(authenticationManager)
 //		.userDetailsService(userDetailsServiceImpl);
-
+		/********************************************/
 	}
 }

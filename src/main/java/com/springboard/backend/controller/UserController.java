@@ -144,13 +144,35 @@ public class UserController {
         
         ResponseEntity<String> response = restTemplate.postForEntity("http://localhost:8080/oauth/token", request, String.class);
         System.out.println("강진희가 드디어 잡았다.33333333333");
-//        return response.getBody();
         if (response.getStatusCode() == HttpStatus.OK) {
             return gson.fromJson(response.getBody(), OAuthToken.class);
         }
         System.out.println("강진희가 드디어 잡았다.44444444444444444444");
         return null;
     }
+	
+	@GetMapping(value = "/oauth2/token/refresh")
+	public OAuthToken refreshToken(@RequestParam String refreshToken) {
+		String credentials = "testClientId:testSecret";
+        String encodedCredentials = new String(Base64.encodeBase64(credentials.getBytes()));
+        
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
+        headers.add("Authorization", "Basic " + encodedCredentials);
+        headers.add("Accept", MediaType.APPLICATION_JSON_VALUE);
+
+        MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
+        params.add("refresh_token", refreshToken);
+        params.add("grant_type", "refresh_token");
+        
+        HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<>(params, headers);
+        ResponseEntity<String> response = restTemplate.postForEntity("http://localhost:8080/oauth/token", request, String.class);
+        
+        if (response.getStatusCode() == HttpStatus.OK) {
+            return gson.fromJson(response.getBody(), OAuthToken.class);
+        }
+        return null;
+	}
 	
 	
 	

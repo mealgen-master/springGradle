@@ -15,6 +15,9 @@ security:
    oauth:
       authorization:
          check-token-access: isAuthenticated()
+   oauth2:
+      jwt:
+         signkey: 123@#$
 ## security: JWT 블록 - isAuthenticated() 인증되었는지 여부
 ##---
 
