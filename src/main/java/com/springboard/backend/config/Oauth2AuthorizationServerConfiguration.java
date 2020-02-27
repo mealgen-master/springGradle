@@ -18,28 +18,18 @@ import org.springframework.security.oauth2.provider.token.TokenStore;
 import org.springframework.security.oauth2.provider.token.store.InMemoryTokenStore;
 import org.springframework.security.oauth2.provider.token.store.JdbcTokenStore;
 import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenConverter;
+import org.springframework.security.oauth2.provider.token.store.JwtTokenStore;
 
 import com.springboard.backend.service.UserDetailsServiceImpl;
 
 @Configuration
 @EnableAuthorizationServer
 public class Oauth2AuthorizationServerConfiguration extends AuthorizationServerConfigurerAdapter {
-
-	@Bean
-	public TokenStore tokenStore() {
-		return new InMemoryTokenStore();
-	}
-
 	@Autowired
 	private AuthenticationManager authenticationManager;
 	
 	@Autowired
 	private PasswordEncoder passwordEncoder;
-
-	@Bean
-	public DefaultAccessTokenConverter accessTokenConverter() {
-		return new DefaultAccessTokenConverter();
-	}
 	
 	@Autowired
 	UserDetailsServiceImpl userDetailsServiceImpl;
@@ -51,6 +41,7 @@ public class Oauth2AuthorizationServerConfiguration extends AuthorizationServerC
 	public JwtAccessTokenConverter jwtAccessTokenConverter() {
 //		return new JwtAccessTokenConverter();
 		JwtAccessTokenConverter converter = new JwtAccessTokenConverter();
+		converter.setVerifierKey(signKey);
 		converter.setSigningKey(signKey);
 		return converter;
 		
