@@ -22,15 +22,19 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
 
     @Override
     public void configure(HttpSecurity http) throws Exception {
-        http
-            .anonymous()
-                .and()
-            .authorizeRequests()
-                .mvcMatchers(HttpMethod.GET, "/api/**").anonymous()
-                .anyRequest().authenticated()
-                .and()
-            .exceptionHandling()
-                .accessDeniedHandler(new OAuth2AccessDeniedHandler())
+    	http.headers().frameOptions().disable();
+        http.authorizeRequests()
+            .antMatchers("/api/users").access("#oauth2.hasScope('read')")
+            .anyRequest().authenticated();
+//        http
+//            .anonymous()
+//                .and()
+//            .authorizeRequests()
+//                .mvcMatchers(HttpMethod.GET, "/api/**").anonymous()
+//                .anyRequest().authenticated()
+//                .and()
+//            .exceptionHandling()
+//                .accessDeniedHandler(new OAuth2AccessDeniedHandler())
             // 인증이 안되거나, 권한이없는경우 예외가 발생하며 OAuth2AccessDeniedHandler 가 403 응답을 내보낸다.
         ;
     }

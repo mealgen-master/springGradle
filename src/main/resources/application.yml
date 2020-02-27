@@ -5,7 +5,7 @@ spring:
       drive-class-name: com.mysql.cj.jdbc.Driver
       url: jdbc:mysql://localhost:3306/sys?serverTimezone=UTC&characterEncoding=UTF-8
       username: root
-      password: 1201!
+      password: kjsh22887!
   jpa:
     database: mysql
     database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
@@ -13,7 +13,7 @@ spring:
     show-sql: true
     hibernate:
       format_sql: true
-      ddl-auto: update
+      ddl-auto: validate
 security:
    oauth:
       authorization:
