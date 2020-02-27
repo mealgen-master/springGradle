@@ -21,6 +21,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.springboard.backend.model.OauthClientDetails;
 import com.springboard.backend.model.UserRole;
 
 import lombok.AllArgsConstructor;
@@ -68,6 +69,12 @@ public class Users implements UserDetails {
 	@JoinColumn(name="user_id")
 	@ElementCollection(fetch = FetchType.EAGER)
 	private List<UserRole> userRoles = new ArrayList<>();
+	
+	
+//	@OneToMany(cascade=CascadeType.ALL, fetch=FetchType.EAGER)
+//	// FetchType = 로딩 타입을 Eager 또는 lazy로 지정 == 즉시로딩/ 지연로딩
+//	@JoinColumn(name="client_id")
+//	private OauthClientDetails oauthClientDetails;
 
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {

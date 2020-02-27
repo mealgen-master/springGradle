@@ -11,7 +11,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -22,6 +22,7 @@ import org.springframework.web.client.RestTemplate;
 import com.google.gson.Gson;
 import com.springboard.backend.dto.Users;
 import com.springboard.backend.model.OAuthToken;
+import com.springboard.backend.model.OauthClientDetails;
 import com.springboard.backend.model.UserRole;
 import com.springboard.backend.model.UserRole.Role;
 import com.springboard.backend.repository.UserJpaRepository;
@@ -58,8 +59,8 @@ public class UserController {
 		return userService.selectAllList();
 	};
 	
-//	@Autowired
-//	PasswordEncoder passwordEncoder;
+	@Autowired
+	PasswordEncoder passwordEncoder;
 	
 	@GetMapping("/api/addUser")
 	private String addUser(
@@ -71,7 +72,8 @@ public class UserController {
 	) {
 		UserRole userRole = new UserRole();
 		
-		BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+		// auth.authenticationProvider(authenticationProvider); 으로 인한 BCryptPasswordEncoder 다시 주
+//		BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder(); 
 		
 		Users user = new Users();
 		user.setUsername(username);
@@ -122,6 +124,29 @@ public class UserController {
 		// System.out.print("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
 		//		System.out.print(address2);
 		return userService.selectAllList();
+	}
+	
+	
+	@GetMapping("/api/oauthDetailAdd")
+	public String addAuthSetting(@RequestParam(name="client_id") String client_id, @RequestParam(name="resource_ids") String  resource_ids,
+			@RequestParam(name="client_secret") String  client_secret,@RequestParam(name="scope") String scope,@RequestParam(name="authorized_grant_types") String authorized_grant_types,
+			@RequestParam(name="web_server_redirect_uri") String  web_server_redirect_uri,@RequestParam(name="authorities") String  authorities,
+			@RequestParam(name="access_token_validity") Integer  access_token_validity, @RequestParam(name="refresh_token_validity") Integer  refresh_token_validity,
+			@RequestParam(name="additional_information") String  additional_information,@RequestParam(name="autoapprove") String autoapprove) {
+		OauthClientDetails oauthClientDetails = new OauthClientDetails();
+		oauthClientDetails.setClient_id(client_id);
+		oauthClientDetails.setResource_ids(resource_ids);
+		oauthClientDetails.setClient_secret(client_secret);
+		oauthClientDetails.setScope(scope);
+		oauthClientDetails.setAuthorized_grant_types(authorized_grant_types);
+		oauthClientDetails.setWeb_server_redirect_uri(web_server_redirect_uri);
+		oauthClientDetails.setAuthorities(authorities);
+		oauthClientDetails.setAccess_token_validity(access_token_validity);
+		oauthClientDetails.setRefresh_token_validity(refresh_token_validity);
+		oauthClientDetails.setAdditional_information(additional_information);
+		oauthClientDetails.setAutoapprove(autoapprove);
+		userService.addOauthCilentDetail(oauthClientDetails);
+		return " 인증 정보 저장 완료.";
 	}
 	
 	@GetMapping(value = "/oauth2/callback")

@@ -1,19 +1,22 @@
 package com.springboard.backend.service;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.springboard.backend.dto.Users;
+import com.springboard.backend.model.OauthClientDetails;
+import com.springboard.backend.repository.OauthJPARepository;
 import com.springboard.backend.repository.UserRepository;
-
-import java.util.Optional;
-
-import org.springframework.beans.factory.annotation.Autowired;
 
 @Service
 public class UserService {
 	
 	@Autowired
 	private UserRepository userRepository;
+	
+	
+	@Autowired
+	private OauthJPARepository oauthJPARepository;
 	
 	public Iterable<Users> selectAllList() {
 		return userRepository.findAll();
@@ -42,5 +45,9 @@ public class UserService {
 	
 	public Users selectUserData(Integer id) {
 		return userRepository.findById(id).get();
+	}
+	
+	public void addOauthCilentDetail(OauthClientDetails oauthClientDetails) {
+		 oauthJPARepository.save(oauthClientDetails);
 	}
 }

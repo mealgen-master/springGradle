@@ -1,16 +1,19 @@
 server:
    port: 8080
 spring:
-   datasource:
+  datasource:
       drive-class-name: com.mysql.cj.jdbc.Driver
       url: jdbc:mysql://localhost:3306/sys?serverTimezone=UTC&characterEncoding=UTF-8
       username: root
-      password: kjsh22887!
-jpa:
-   database: mysql
-   database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
-   general-ddl: true
-   show-sql: true
+      password: 1201!
+  jpa:
+    database: mysql
+    database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
+    general-ddl: true
+    show-sql: true
+    hibernate:
+      format_sql: true
+      ddl-auto: update
 security:
    oauth:
       authorization:
