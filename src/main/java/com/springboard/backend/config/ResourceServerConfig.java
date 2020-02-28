@@ -1,8 +1,14 @@
 package com.springboard.backend.config;
 
+import java.io.IOException;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.FileSystemResource;
+import org.springframework.core.io.Resource;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableResourceServer;
 import org.springframework.security.oauth2.config.annotation.web.configuration.ResourceServerConfigurerAdapter;
@@ -10,6 +16,9 @@ import org.springframework.security.oauth2.config.annotation.web.configurers.Res
 import org.springframework.security.oauth2.provider.token.TokenStore;
 import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenConverter;
 import org.springframework.security.oauth2.provider.token.store.JwtTokenStore;
+import org.springframework.security.rsa.crypto.KeyStoreKeyFactory;
+
+import io.micrometer.core.instrument.util.IOUtils;
 
 @Configuration
 @EnableResourceServer
@@ -22,12 +31,26 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
 	public TokenStore tokenStore() {
 		return new JwtTokenStore(accessTokenConverter());
 	}
-	
+
+	/**
+     * jwt converter - signKey 공유 방식
+     */
+//	@Bean
+//	public JwtAccessTokenConverter accessTokenConverter() {
+//		JwtAccessTokenConverter converter = new JwtAccessTokenConverter();
+//		converter.setVerifierKey(signKey);
+//		converter.setSigningKey(signKey);
+//		return converter;
+//	}
+
+	/**
+     * jwt converter - 비대칭 키 sign
+     */
 	@Bean
 	public JwtAccessTokenConverter accessTokenConverter() {
 		JwtAccessTokenConverter converter = new JwtAccessTokenConverter();
-		converter.setVerifierKey(signKey);
-		converter.setSigningKey(signKey);
+    	KeyStoreKeyFactory keyStoreKeyFactory = new KeyStoreKeyFactory(new FileSystemResource("src/main/resources/oauth2jwt.jks"), "oauth2jwtpass".toCharArray());
+    	converter.setKeyPair(keyStoreKeyFactory.getKeyPair("oauth2jwt"));
 		return converter;
 	}
 	
