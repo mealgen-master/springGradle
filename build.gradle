@@ -34,7 +34,16 @@ repositories {
     maven { url 'http://oss.jfrog.org/artifactory/oss-snapshot-local/' }
 }
 
+bootJar {
+	archiveBaseName = '-'
+	archiveFileName = '-.jar'
+	archiveVersion = "0.0.0"
+}
+
 dependencies {
+	
+	implementation 'com.google.code.gson:gson:2.8.6'
+	
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	testCompile 'org.springframework.boot:spring-boot-starter-test'
 	
@@ -54,12 +63,7 @@ dependencies {
     implementation 'org.springframework.cloud:spring-cloud-starter-oauth2:2.1.2.RELEASE'
     
     // https://mvnrepository.com/artifact/org.springframework.security/spring-security-oauth2-client
-	compile group: 'org.springframework.security', name: 'spring-security-oauth2-client', version: '5.2.2.RELEASE'
-
-    
-
-	
-	
+	compile group: 'org.springframework.security', name: 'spring-security-oauth2-client', version: '5.2.2.RELEASE'	
 }
 
 test {
