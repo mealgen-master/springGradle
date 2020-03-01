@@ -15,7 +15,7 @@ import org.springframework.security.oauth2.config.annotation.web.configuration.E
 import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerEndpointsConfigurer;
 import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerSecurityConfigurer;
 import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenConverter;
-import org.springframework.security.rsa.crypto.KeyStoreKeyFactory;
+import org.springframework.security.oauth2.provider.token.store.KeyStoreKeyFactory;
 
 import com.springboard.backend.service.UserDetailsServiceImpl;
 
@@ -25,8 +25,8 @@ public class Oauth2AuthorizationServerConfiguration extends AuthorizationServerC
 
 //	@Bean
 //	public TokenStore tokenStore() {
-////		return new InMemoryTokenStore();
-//		return new JwtTokenStore(jwtAccessTokenConverter()); 
+//		return new InMemoryTokenStore();
+////		return new JwtTokenStore(jwtAccessTokenConverter()); 
 //	}
 
 	@Autowired
@@ -46,7 +46,7 @@ public class Oauth2AuthorizationServerConfiguration extends AuthorizationServerC
      */
 //	@Bean
 //	public JwtAccessTokenConverter jwtAccessTokenConverter() {
-//		return new JwtAccessTokenConverter();
+////		return new JwtAccessTokenConverter();
 //		JwtAccessTokenConverter converter = new JwtAccessTokenConverter();
 //		converter.setVerifierKey(signKey);
 //		converter.setSigningKey(signKey);
@@ -58,9 +58,11 @@ public class Oauth2AuthorizationServerConfiguration extends AuthorizationServerC
      */
     @Bean
 	public JwtAccessTokenConverter jwtAccessTokenConverter() {
-    	KeyStoreKeyFactory keyStoreKeyFactory = new KeyStoreKeyFactory(new FileSystemResource("src/main/resources/oauth2jwt.jks"), "oauth2jwtpass".toCharArray());
+//    	KeyStoreKeyFactory keyStoreKeyFactory = new KeyStoreKeyFactory(new FileSystemResource("src/main/resources/oauth2jwt.jks"), "oauth2jwtpass".toCharArray());
+    	KeyStoreKeyFactory keyStoreKeyFactory = new KeyStoreKeyFactory(new FileSystemResource("src/main/resources/oauth22jwt.jks"), "oauth2jwtpass".toCharArray());
     	JwtAccessTokenConverter converter = new JwtAccessTokenConverter();
-    	converter.setKeyPair(keyStoreKeyFactory.getKeyPair("oauth2jwt"));
+//    	converter.setKeyPair(keyStoreKeyFactory.getKeyPair("oauth2jwt"));
+    	converter.setKeyPair(keyStoreKeyFactory.getKeyPair("oauth22jwt"));
     	System.out.println("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%");
     	return converter;
     }
@@ -76,6 +78,13 @@ public class Oauth2AuthorizationServerConfiguration extends AuthorizationServerC
 //		clients.inMemory().withClient("testClientId").secret(passwordEncoder.encode("testSecret"))
 //		// inMemory에 저장된 값과 
 //				.redirectUris("http://localhost:8080/oauth2/callback").authorizedGrantTypes("authorization_code")
+//				.scopes("read", "write").accessTokenValiditySeconds(30000);
+		//네이버 클라우드 용.
+        // 49.50.165.170:
+        //        49.50.165.35:8080
+//		clients.inMemory().withClient("testClientId").secret(passwordEncoder.encode("testSecret"))
+//		// inMemory에 저장된 값과 
+//				.redirectUris("http://49.50.165.35:8080/oauth2/callback").authorizedGrantTypes("authorization_code")
 //				.scopes("read", "write").accessTokenValiditySeconds(30000);
 	}
 	

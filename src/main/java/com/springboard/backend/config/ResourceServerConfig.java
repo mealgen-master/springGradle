@@ -49,8 +49,10 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
 	@Bean
 	public JwtAccessTokenConverter accessTokenConverter() {
 		JwtAccessTokenConverter converter = new JwtAccessTokenConverter();
-    	KeyStoreKeyFactory keyStoreKeyFactory = new KeyStoreKeyFactory(new FileSystemResource("src/main/resources/oauth2jwt.jks"), "oauth2jwtpass".toCharArray());
-    	converter.setKeyPair(keyStoreKeyFactory.getKeyPair("oauth2jwt"));
+//    	KeyStoreKeyFactory keyStoreKeyFactory = new KeyStoreKeyFactory(new FileSystemResource("src/main/resources/oauth2jwt.jks"), "oauth2jwtpass".toCharArray());
+		KeyStoreKeyFactory keyStoreKeyFactory = new KeyStoreKeyFactory(new FileSystemResource("src/main/resources/oauth22jwt.jks"), "oauth2jwtpass".toCharArray());
+//    	converter.setKeyPair(keyStoreKeyFactory.getKeyPair("oauth2jwt"));
+		converter.setKeyPair(keyStoreKeyFactory.getKeyPair("oauth22jwt"));
 		return converter;
 	}
 	
@@ -68,7 +70,7 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
     public void configure(HttpSecurity http) throws Exception {
     	http.headers().frameOptions().disable();
         http.authorizeRequests()
-        	.antMatchers("/oauth/**", "/oauth/token", "/oauth2/callback**", "/h2-console/*").permitAll()
+        	.antMatchers("/oauth/**", "/oauth2/**", "/h2-console/*","/api/addUser**","/api/oauthDetailAdd**").permitAll()
             .antMatchers("/api/users").access("#oauth2.hasScope('read')")
             .anyRequest().authenticated();
 //        http

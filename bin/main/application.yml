@@ -4,8 +4,9 @@ spring:
   datasource:
       drive-class-name: com.mysql.cj.jdbc.Driver
       url: jdbc:mysql://localhost:3306/sys?serverTimezone=UTC&characterEncoding=UTF-8
+#      url: jdbc:mysql://49.50.165.34:3306/sys?serverTimezone=UTC&characterEncoding=UTF-8
       username: root
-      password: kjsh22887!
+      password: "`q1w2e3r4t"
   jpa:
     database: mysql
     database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
@@ -13,14 +14,15 @@ spring:
     show-sql: true
     hibernate:
       format_sql: true
-      ddl-auto: validate
+#      ddl-auto: validate
+      ddl-auto: create
 security:
    oauth:
       authorization:
          check-token-access: isAuthenticated()
    oauth2:
       jwt:
-         signkey: 010123
+         signkey: 010123@!
 ## security: JWT 블록 - isAuthenticated() 인증되었는지 여부
 ##---
 

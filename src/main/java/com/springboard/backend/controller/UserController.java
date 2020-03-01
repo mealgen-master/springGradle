@@ -1,6 +1,8 @@
 package com.springboard.backend.controller;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 import javax.annotation.Resource;
 
@@ -11,10 +13,14 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.FormHttpMessageConverter;
+import org.springframework.http.converter.HttpMessageConverter;
+import org.springframework.http.converter.StringHttpMessageConverter;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
@@ -85,6 +91,37 @@ public class UserController {
 		
 		userService.setUserData(user);
 		
+		// RestTemplate 에 MessageConverter 세팅
+	    List<HttpMessageConverter<?>> converters = new ArrayList<HttpMessageConverter<?>>();
+	    converters.add(new FormHttpMessageConverter());
+	    converters.add(new StringHttpMessageConverter());
+	 
+	    RestTemplate restTemplate = new RestTemplate();
+	    restTemplate.setMessageConverters(converters);
+	 
+	    // parameter 세팅
+	    // 49.50.165.170:
+        //        49.50.165.35:8080
+	    MultiValueMap<String, String> map = new LinkedMultiValueMap<String, String>();
+	    map.add("client_id", "testClientId");
+	    map.add("access_token_validity", "36000");
+	    map.add("authorities", "USER");
+	    map.add("authorized_grant_types", "authorization_code,refresh_token");
+	    map.add("client_secret", passwordEncoder.encode("testSecret"));
+	    map.add("refresh_token_validity", "50000");
+	    map.add("scope", "read,write");
+//	    map.add("web_server_redirect_uri", "http://localhost:8080/oauth2/callback");
+	    map.add("web_server_redirect_uri", "http://49.50.165.35:8080/oauth2/callback");
+	    map.add("additional_information", "");
+	    map.add("autoapprove", "");
+	    map.add("resource_ids", "");
+	    
+	    // REST API 호출
+	    System.out.println("------------------ 결과 ------------------");
+	    String result = restTemplate.postForObject("http://localhost:8080/api/oauthDetailAdd", map, String.class);
+	    System.out.println(result);
+	    System.out.println("------------------ ------------------");
+		
 		return username + " 저장 완료";
 	}
 	
@@ -127,7 +164,7 @@ public class UserController {
 	}
 	
 	
-	@GetMapping("/api/oauthDetailAdd")
+	@RequestMapping("/api/oauthDetailAdd")
 	public String addAuthSetting(@RequestParam(name="client_id") String client_id, @RequestParam(name="resource_ids") String  resource_ids,
 			@RequestParam(name="client_secret") String  client_secret,@RequestParam(name="scope") String scope,@RequestParam(name="authorized_grant_types") String authorized_grant_types,
 			@RequestParam(name="web_server_redirect_uri") String  web_server_redirect_uri,@RequestParam(name="authorities") String  authorities,
@@ -163,11 +200,20 @@ public class UserController {
         MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
         params.add("code", code);
         params.add("grant_type", "authorization_code");
-        params.add("redirect_uri", "http://localhost:8080/oauth2/callback");
+        
+//        params.add("redirect_uri", "http://localhost:8080/oauth2/callback");
+         //네이버 클라우드용////
+        params.add("redirect_uri", "http://49.50.165.35:8080/oauth2/callback");
+         //////////////
         HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<>(params, headers);
         System.out.println("강진희가 드디어 잡았다22222222.");
         
-        ResponseEntity<String> response = restTemplate.postForEntity("http://localhost:8080/oauth/token", request, String.class);
+//        ResponseEntity<String> response = restTemplate.postForEntity("http://localhost:8080/oauth/token", request, String.class);
+        //네이버 클라우드용////
+        ResponseEntity<String> response = restTemplate.postForEntity("http://49.50.165.35:8080/oauth/token", request, String.class);
+        // 49.50.165.170:
+        //        49.50.165.35:8080
+        //////////////
         System.out.println("강진희가 드디어 잡았다.33333333333");
         if (response.getStatusCode() == HttpStatus.OK) {
             return gson.fromJson(response.getBody(), OAuthToken.class);

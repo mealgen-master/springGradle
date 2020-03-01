@@ -36,11 +36,28 @@ repositories {
 
 bootJar {
 	archiveBaseName = '-'
-	archiveFileName = '-.jar'
+	archiveFileName = 'jinheeproject.jar'
 	archiveVersion = "0.0.0"
 }
+ //resource 파일  바라보게 추가 
+sourceSets {
+    main {
+        resources {
+            srcDirs "src/main/resources", "src/main/configs"
+        }
+    }
+}
+
+bootRun {
+	sourceResources sourceSets.main
+}
+
 
 dependencies {
+
+    //resource 파일  바라보게 추가 
+	compile group: 'org.springframework.boot', name: 'spring-boot-maven-plugin', version: '2.2.5.RELEASE'
+    
 	
 	implementation 'com.google.code.gson:gson:2.8.6'
 	
