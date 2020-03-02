@@ -44,28 +44,28 @@ public class Oauth2AuthorizationServerConfiguration extends AuthorizationServerC
 	 /**
      * jwt converter - signKey 공유 방식
      */
-//	@Bean
-//	public JwtAccessTokenConverter jwtAccessTokenConverter() {
-////		return new JwtAccessTokenConverter();
-//		JwtAccessTokenConverter converter = new JwtAccessTokenConverter();
-//		converter.setVerifierKey(signKey);
-//		converter.setSigningKey(signKey);
-//		return converter;	
-//	}
+	@Bean
+	public JwtAccessTokenConverter jwtAccessTokenConverter() {
+//		return new JwtAccessTokenConverter();
+		JwtAccessTokenConverter converter = new JwtAccessTokenConverter();
+		converter.setVerifierKey(signKey);
+		converter.setSigningKey(signKey);
+		return converter;	
+	}
 	
 	/**
      * jwt converter - 비대칭 키 sign
      */
-    @Bean
-	public JwtAccessTokenConverter jwtAccessTokenConverter() {
+//    @Bean
+//	public JwtAccessTokenConverter jwtAccessTokenConverter() {
 //    	KeyStoreKeyFactory keyStoreKeyFactory = new KeyStoreKeyFactory(new FileSystemResource("src/main/resources/oauth2jwt.jks"), "oauth2jwtpass".toCharArray());
-    	KeyStoreKeyFactory keyStoreKeyFactory = new KeyStoreKeyFactory(new FileSystemResource("src/main/resources/oauth22jwt.jks"), "oauth2jwtpass".toCharArray());
-    	JwtAccessTokenConverter converter = new JwtAccessTokenConverter();
+////    	KeyStoreKeyFactory keyStoreKeyFactory = new KeyStoreKeyFactory(new FileSystemResource("src/main/resources/oauth22jwt.jks"), "oauth2jwtpass".toCharArray());
+//    	JwtAccessTokenConverter converter = new JwtAccessTokenConverter();
 //    	converter.setKeyPair(keyStoreKeyFactory.getKeyPair("oauth2jwt"));
-    	converter.setKeyPair(keyStoreKeyFactory.getKeyPair("oauth22jwt"));
-    	System.out.println("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%");
-    	return converter;
-    }
+////    	converter.setKeyPair(keyStoreKeyFactory.getKeyPair("oauth22jwt"));
+//    	System.out.println("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%");
+//    	return converter;
+//    }
     
 	@Value("${security.oauth2.jwt.signkey}")
 	private String signKey;

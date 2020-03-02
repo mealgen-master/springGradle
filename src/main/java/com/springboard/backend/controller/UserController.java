@@ -237,7 +237,9 @@ public class UserController {
         params.add("grant_type", "refresh_token");
         
         HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<>(params, headers);
-        ResponseEntity<String> response = restTemplate.postForEntity("http://localhost:8080/oauth/token", request, String.class);
+//        ResponseEntity<String> response = restTemplate.postForEntity("http://localhost:8080/oauth/token", request, String.class);
+      //네이버 클라우드용////
+        ResponseEntity<String> response = restTemplate.postForEntity("http://49.50.165.35:8080/oauth/token", request, String.class);
         
         if (response.getStatusCode() == HttpStatus.OK) {
             return gson.fromJson(response.getBody(), OAuthToken.class);
