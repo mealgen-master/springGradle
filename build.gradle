@@ -56,10 +56,6 @@ sourceSets {
     }
 }
 
-bootRun {
-	sourceResources sourceSets.main
-}
-
 
 dependencies {
 
