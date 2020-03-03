@@ -34,11 +34,11 @@ repositories {
     maven { url 'http://oss.jfrog.org/artifactory/oss-snapshot-local/' }
 }
 
-bootJar {
-	archiveBaseName = '-'
-	archiveFileName = 'jinheeproject.jar'
-	archiveVersion = "0.0.0"
-}
+//bootJar {
+//	archiveBaseName = '-'
+//	archiveFileName = 'jinheeproject.jar'
+//	archiveVersion = "0.0.0"
+//}
  //resource 파일  바라보게 추가 
 sourceSets {
     main {
