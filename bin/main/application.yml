@@ -1,7 +1,7 @@
 server:
    port: 8080
-   servlet:
-     contextPath: /jinheeproject
+#   servlet:
+#     contextPath: /jinheeproject
 spring:
   datasource:
       drive-class-name: com.mysql.cj.jdbc.Driver
@@ -30,7 +30,7 @@ security:
 
 ## server:
 ##   port: 8081
-##spring:
+##spring: 
 ##   h2:
 ##      console:
 ##      enabled: true
