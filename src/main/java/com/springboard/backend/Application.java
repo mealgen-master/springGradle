@@ -1,10 +1,9 @@
 package com.springboard.backend;
 
 import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.boot.autoconfigure.domain.EntityScan;
-import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import org.springframework.boot.builder.SpringApplicationBuilder;
+import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
 
 //@EnableResourceServer
 // 리소스서버 사용을 가능하게
@@ -14,7 +13,12 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 @SpringBootApplication
 //@EnableConfigurationProperties
 //@EntityScan(basePackages = {"com.springboard.backend"})  
-public class Application {
+public class Application extends SpringBootServletInitializer {
+	
+	@Override
+    protected SpringApplicationBuilder configure(SpringApplicationBuilder application) {
+        return application.sources(Application.class);
+    }
 
 	public static void main(String[] args) {
 		SpringApplication.run(Application.class, args);
