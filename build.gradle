@@ -2,7 +2,7 @@ plugins {
 	id 'org.springframework.boot' version '2.2.4.RELEASE'
 	id 'io.spring.dependency-management' version '1.0.9.RELEASE'
 	id 'java'
-	id 'war'
+	//id 'war'
 }
 
 //group = 'com.springboard'
@@ -36,17 +36,17 @@ repositories {
     maven { url 'http://oss.jfrog.org/artifactory/oss-snapshot-local/' }
 }
 
-//bootJar {
-//	archiveBaseName = '-'
-//	archiveFileName = 'jinheeproject.jar'
-//	archiveVersion = "0.0.1"
-//}
-
-bootWar {
+bootJar {
 	archiveBaseName = '-'
-	archiveFileName = 'jinheeproject.war'
+	archiveFileName = 'jinheeproject.jar'
 	archiveVersion = "0.0.1"
 }
+
+//bootWar {
+//	archiveBaseName = '-'
+//	archiveFileName = 'jinheeproject.war'
+//	archiveVersion = "0.0.1"
+//}
 
  //resource 파일  바라보게 추가 
 sourceSets {

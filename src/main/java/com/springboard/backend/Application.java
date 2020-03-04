@@ -5,14 +5,11 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
 
-//@EnableResourceServer
-// 리소스서버 사용을 가능하게
-//@EnableAuthorizationServer
-// 인증서버 사용을 가능하게
+
 //@EnableAutoConfiguration
-@SpringBootApplication
 //@EnableConfigurationProperties
 //@EntityScan(basePackages = {"com.springboard.backend"})  
+@SpringBootApplication
 public class Application extends SpringBootServletInitializer {
 	
 	@Override
