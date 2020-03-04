@@ -60,7 +60,7 @@ sourceSets {
 
 dependencies {
 
-    providedRuntime 'org.springframework.boot:spring-boot-starter-tomcat'
+    //providedRuntime 'org.springframework.boot:spring-boot-starter-tomcat'
     //resource 파일  바라보게 추가 
 	compile group: 'org.springframework.boot', name: 'spring-boot-maven-plugin', version: '2.2.5.RELEASE'
     
