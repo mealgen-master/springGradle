@@ -32,6 +32,8 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
 		return new JwtTokenStore(accessTokenConverter());
 	}
 
+	@Value("classpath:oauth2jwt.jks")
+	Resource resourceFile;
 	/**
      * jwt converter - signKey 공유 방식
      */
@@ -49,8 +51,8 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
 	@Bean
 	public JwtAccessTokenConverter accessTokenConverter() {
 		JwtAccessTokenConverter converter = new JwtAccessTokenConverter();
-    	KeyStoreKeyFactory keyStoreKeyFactory = new KeyStoreKeyFactory(new FileSystemResource("src/main/resources/oauth2jwt.jks"), "oauth2jwtpass".toCharArray());
-//		KeyStoreKeyFactory keyStoreKeyFactory = new KeyStoreKeyFactory(new FileSystemResource("src/main/resources/oauth22jwt.jks"), "oauth2jwtpass".toCharArray());
+//    	KeyStoreKeyFactory keyStoreKeyFactory = new KeyStoreKeyFactory(new FileSystemResource("src/main/resources/oauth2jwt.jks"), "oauth2jwtpass".toCharArray());
+		KeyStoreKeyFactory keyStoreKeyFactory = new KeyStoreKeyFactory(resourceFile, "oauth2jwtpass".toCharArray());
     	converter.setKeyPair(keyStoreKeyFactory.getKeyPair("oauth2jwt"));
 //		converter.setKeyPair(keyStoreKeyFactory.getKeyPair("oauth22jwt"));
 		return converter;

@@ -6,7 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.core.io.FileSystemResource;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.config.annotation.configurers.ClientDetailsServiceConfigurer;
@@ -41,6 +42,10 @@ public class Oauth2AuthorizationServerConfiguration extends AuthorizationServerC
 	@Autowired
 	private DataSource datasource;
 	
+	
+	@Value("classpath:oauth2jwt.jks")
+	Resource resourceFile;
+	
 	 /**
      * jwt converter - signKey 공유 방식
      */
@@ -58,8 +63,8 @@ public class Oauth2AuthorizationServerConfiguration extends AuthorizationServerC
      */
     @Bean
 	public JwtAccessTokenConverter jwtAccessTokenConverter() {
-    	KeyStoreKeyFactory keyStoreKeyFactory = new KeyStoreKeyFactory(new FileSystemResource("src/main/resources/oauth2jwt.jks"), "oauth2jwtpass".toCharArray());
-//    	KeyStoreKeyFactory keyStoreKeyFactory = new KeyStoreKeyFactory(new FileSystemResource("src/main/resources/oauth22jwt.jks"), "oauth2jwtpass".toCharArray());
+    	KeyStoreKeyFactory keyStoreKeyFactory = new KeyStoreKeyFactory(resourceFile, "oauth2jwtpass".toCharArray());
+//    	KeyStoreKeyFactory keyStoreKeyFactory = new KeyStoreKeyFactory(new FileSystemResource("src/main/resources/oauth2jwt.jks"), "oauth2jwtpass".toCharArray());
     	JwtAccessTokenConverter converter = new JwtAccessTokenConverter();
     	converter.setKeyPair(keyStoreKeyFactory.getKeyPair("oauth2jwt"));
 //    	converter.setKeyPair(keyStoreKeyFactory.getKeyPair("oauth22jwt"));
