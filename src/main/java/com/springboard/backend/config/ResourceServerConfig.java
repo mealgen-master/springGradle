@@ -35,26 +35,26 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
 	/**
      * jwt converter - signKey 공유 방식
      */
-	@Bean
-	public JwtAccessTokenConverter accessTokenConverter() {
-		JwtAccessTokenConverter converter = new JwtAccessTokenConverter();
-		converter.setVerifierKey(signKey);
-		converter.setSigningKey(signKey);
-		return converter;
-	}
+//	@Bean
+//	public JwtAccessTokenConverter accessTokenConverter() {
+//		JwtAccessTokenConverter converter = new JwtAccessTokenConverter();
+//		converter.setVerifierKey(signKey);
+//		converter.setSigningKey(signKey);
+//		return converter;
+//	}
 
 	/**
      * jwt converter - 비대칭 키 sign
      */
-//	@Bean
-//	public JwtAccessTokenConverter accessTokenConverter() {
-//		JwtAccessTokenConverter converter = new JwtAccessTokenConverter();
-//    	KeyStoreKeyFactory keyStoreKeyFactory = new KeyStoreKeyFactory(new FileSystemResource("src/main/resources/oauth2jwt.jks"), "oauth2jwtpass".toCharArray());
-////		KeyStoreKeyFactory keyStoreKeyFactory = new KeyStoreKeyFactory(new FileSystemResource("src/main/resources/oauth22jwt.jks"), "oauth2jwtpass".toCharArray());
-//    	converter.setKeyPair(keyStoreKeyFactory.getKeyPair("oauth2jwt"));
-////		converter.setKeyPair(keyStoreKeyFactory.getKeyPair("oauth22jwt"));
-//		return converter;
-//	}
+	@Bean
+	public JwtAccessTokenConverter accessTokenConverter() {
+		JwtAccessTokenConverter converter = new JwtAccessTokenConverter();
+    	KeyStoreKeyFactory keyStoreKeyFactory = new KeyStoreKeyFactory(new FileSystemResource("src/main/resources/oauth2jwt.jks"), "oauth2jwtpass".toCharArray());
+//		KeyStoreKeyFactory keyStoreKeyFactory = new KeyStoreKeyFactory(new FileSystemResource("src/main/resources/oauth22jwt.jks"), "oauth2jwtpass".toCharArray());
+    	converter.setKeyPair(keyStoreKeyFactory.getKeyPair("oauth2jwt"));
+//		converter.setKeyPair(keyStoreKeyFactory.getKeyPair("oauth22jwt"));
+		return converter;
+	}
 	
     /**
      * Resource ID 설정
@@ -70,7 +70,7 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
     public void configure(HttpSecurity http) throws Exception {
     	http.headers().frameOptions().disable();
         http.authorizeRequests()
-        	.antMatchers("/oauth/**", "/oauth2/**", "/h2-console/*","/api/addUser**","/api/oauthDetailAdd**","/").permitAll()
+        	.antMatchers("/oauth/**", "/oauth2/**", "/h2-console/*","/api/addUser**","/api/oauthDetailAdd**","/","/greeting**").permitAll()
             .antMatchers("/api/users").access("#oauth2.hasScope('read')")
             .anyRequest().authenticated();
 //        http
