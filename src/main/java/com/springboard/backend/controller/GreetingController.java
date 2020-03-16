@@ -13,9 +13,12 @@ public class GreetingController {
 
 	private static final String template = "Hello, %s!";
 	private final AtomicLong counter = new AtomicLong();
-
+    private int num = 0;
+    
 	@GetMapping("/greeting")
 	public Greeting greeting(@RequestParam(value = "name", defaultValue = "World") String name) {
+		num += 1;
+		System.out.println("Greeting 호출 :" + num);
 		return new Greeting(counter.incrementAndGet(), String.format(template, name));
 	}
 }

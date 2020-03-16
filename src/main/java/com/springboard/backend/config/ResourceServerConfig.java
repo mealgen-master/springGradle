@@ -20,8 +20,8 @@ import org.springframework.security.rsa.crypto.KeyStoreKeyFactory;
 
 import io.micrometer.core.instrument.util.IOUtils;
 
-@Configuration
-@EnableResourceServer
+//@Configuration
+//@EnableResourceServer
 public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
 
 	@Value("${security.oauth2.jwt.signkey}")
@@ -72,8 +72,9 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
     public void configure(HttpSecurity http) throws Exception {
     	http.headers().frameOptions().disable();
         http.authorizeRequests()
-        	.antMatchers("/oauth/**", "/oauth2/**", "/h2-console/*","/api/addUser**","/api/oauthDetailAdd**","/","/greeting**").permitAll()
+        	.antMatchers("/oauth/**", "/oauth2/**", "/h2-console/*","/api/addUser**","/api/oauthDetailAdd**","/","/greeting**","/swagger-ui.html#").permitAll()
             .antMatchers("/api/users").access("#oauth2.hasScope('read')")
+//            .antMatchers("/greeting**").access("#oauth2.hasScope('write')")
             .anyRequest().authenticated();
 //        http
 //            .anonymous()

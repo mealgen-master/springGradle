@@ -34,7 +34,9 @@ import com.springboard.backend.model.UserRole.Role;
 import com.springboard.backend.repository.UserJpaRepository;
 import com.springboard.backend.service.UserService;
 
+import io.swagger.annotations.Api;
 
+@Api(tags = {"유저 진희 API"})
 @RestController
 //@RequestMapping(path = UserController.REQUEST_BASE_PATH)
 //@ControllerAdvice
@@ -69,7 +71,7 @@ public class UserController {
 	PasswordEncoder passwordEncoder;
 	
 	@GetMapping("/api/addUser")
-	private String addUser(
+	private ResponseEntity<?> addUser(
 			@RequestParam(name="username") String username,
 			@RequestParam(name="phonenumber") String phonenumber,
 			@RequestParam(name="address") String address,
@@ -110,8 +112,8 @@ public class UserController {
 	    map.add("client_secret", passwordEncoder.encode("testSecret"));
 	    map.add("refresh_token_validity", "50000");
 	    map.add("scope", "read,write");
-//	    map.add("web_server_redirect_uri", "http://localhost:8080/oauth2/callback");
-	    map.add("web_server_redirect_uri", "http://49.50.165.35:8080/oauth2/callback");
+	    map.add("web_server_redirect_uri", "http://localhost:8080/oauth2/callback");
+//	    map.add("web_server_redirect_uri", "http://49.50.165.35:8080/oauth2/callback");
 	    map.add("additional_information", "");
 	    map.add("autoapprove", "");
 	    map.add("resource_ids", "");
@@ -122,7 +124,8 @@ public class UserController {
 	    System.out.println(result);
 	    System.out.println("------------------ ------------------");
 		
-		return username + " 저장 완료";
+//		return username + " 저장 완료";
+	    return ResponseEntity.ok().build();
 	}
 	
 	@GetMapping("/api/updateUser")
@@ -201,16 +204,16 @@ public class UserController {
         params.add("code", code);
         params.add("grant_type", "authorization_code");
         
-//        params.add("redirect_uri", "http://localhost:8080/oauth2/callback");
+        params.add("redirect_uri", "http://localhost:8080/oauth2/callback");
          //네이버 클라우드용////
-        params.add("redirect_uri", "http://49.50.165.35:8080/oauth2/callback");
+//        params.add("redirect_uri", "http://49.50.165.35:8080/oauth2/callback");
          //////////////
         HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<>(params, headers);
         System.out.println("강진희가 드디어 잡았다22222222.");
         
-//        ResponseEntity<String> response = restTemplate.postForEntity("http://localhost:8080/oauth/token", request, String.class);
+        ResponseEntity<String> response = restTemplate.postForEntity("http://localhost:8080/oauth/token", request, String.class);
         //네이버 클라우드용////
-        ResponseEntity<String> response = restTemplate.postForEntity("http://49.50.165.35:8080/oauth/token", request, String.class);
+//        ResponseEntity<String> response = restTemplate.postForEntity("http://49.50.165.35:8080/oauth/token", request, String.class);
         // 49.50.165.170:
         //        49.50.165.35:8080
         //////////////
@@ -237,9 +240,9 @@ public class UserController {
         params.add("grant_type", "refresh_token");
         
         HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<>(params, headers);
-//        ResponseEntity<String> response = restTemplate.postForEntity("http://localhost:8080/oauth/token", request, String.class);
+        ResponseEntity<String> response = restTemplate.postForEntity("http://localhost:8080/oauth/token", request, String.class);
       //네이버 클라우드용////
-        ResponseEntity<String> response = restTemplate.postForEntity("http://49.50.165.35:8080/oauth/token", request, String.class);
+//        ResponseEntity<String> response = restTemplate.postForEntity("http://49.50.165.35:8080/oauth/token", request, String.class);
         
         if (response.getStatusCode() == HttpStatus.OK) {
             return gson.fromJson(response.getBody(), OAuthToken.class);
