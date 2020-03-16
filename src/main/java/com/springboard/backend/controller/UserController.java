@@ -36,7 +36,7 @@ import com.springboard.backend.service.UserService;
 
 import io.swagger.annotations.Api;
 
-@Api(tags = {"유저 진희 API"})
+@Api(tags = {"유저 API"})
 @RestController
 //@RequestMapping(path = UserController.REQUEST_BASE_PATH)
 //@ControllerAdvice
