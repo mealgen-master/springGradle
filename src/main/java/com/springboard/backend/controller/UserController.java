@@ -1,12 +1,20 @@
 package com.springboard.backend.controller;
 
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 import javax.annotation.Resource;
+import javax.security.auth.login.AccountNotFoundException;
+import javax.validation.Valid;
+import javax.websocket.server.PathParam;
 
+import com.springboard.backend.dto.UsersDTO;
+import io.swagger.annotations.ApiParam;
+import io.swagger.models.auth.In;
 import org.apache.commons.codec.binary.Base64;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -19,10 +27,7 @@ import org.springframework.http.converter.StringHttpMessageConverter;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 
 import com.google.gson.Gson;
@@ -69,6 +74,41 @@ public class UserController {
 	
 	@Autowired
 	PasswordEncoder passwordEncoder;
+
+	@Autowired
+	private ModelMapper modelMapper;
+
+	@PostMapping("/api/addUserDTO")
+	private ResponseEntity<UsersDTO.Response> addUserDTO(@RequestBody  @Valid UsersDTO.Create userCreateDto) throws URISyntaxException {
+		//        Users users = Users.builder() 1. ModelMapper 를 사용하지 않는 방법
+//                .username(userCreateDto.getUsername())
+//                .phonenumber(userCreateDto.getPhonenumber())
+		//ModelMapper 를 사용하는 방법
+//		Users users = modelMapper.map(userCreateDto , Users.class); // 위에 사용하지 않는 방법은 많은 값을 입력한다. //ModelMapper 를 사용하면 이 1줄로 들어온 모든 값을 1세팅 할 수 있다.
+
+		UsersDTO.Response usersDtoResponse = userService.setUserDataDto(userCreateDto);
+
+		return ResponseEntity.ok(usersDtoResponse);
+	}
+
+	@PutMapping("/api/updateDTO/{id}")
+	private ResponseEntity<UsersDTO.Response> updateUserDTO (@ApiParam(required = true, example = "1") @PathVariable final Integer id, @RequestBody @Valid UsersDTO.Update userDtoUpdate) throws AccountNotFoundException {
+		UsersDTO.Response usersDtoResponse = userService.updateUserDto(id ,userDtoUpdate);
+
+		return ResponseEntity.ok(usersDtoResponse);
+	}
+
+	@GetMapping("/api/selectUserDTO/{id}")
+	private  ResponseEntity<UsersDTO.Response> selectUserDTO(@ApiParam(required = true , example = "1") @PathVariable final  Integer id) {
+		UsersDTO.Response userDtoResponse = userService.selectUserDTO(id);
+		return ResponseEntity.ok(userDtoResponse);
+	}
+
+	@DeleteMapping("/api/deleteUserDTO/{id}")
+	private ResponseEntity<?> deleteUserDTO(@ApiParam(required = true, example = "1") @PathVariable final Integer id) {
+		userService.deleteUserDTO(id);
+		return ResponseEntity.noContent().build();
+	}
 	
 	@GetMapping("/api/addUser")
 	private ResponseEntity<?> addUser(
@@ -167,7 +207,7 @@ public class UserController {
 	}
 	
 	
-	@RequestMapping("/api/oauthDetailAdd")
+	@RequestMapping(value = "/api/oauthDetailAdd", method = RequestMethod.POST)
 	public String addAuthSetting(@RequestParam(name="client_id") String client_id, @RequestParam(name="resource_ids") String  resource_ids,
 			@RequestParam(name="client_secret") String  client_secret,@RequestParam(name="scope") String scope,@RequestParam(name="authorized_grant_types") String authorized_grant_types,
 			@RequestParam(name="web_server_redirect_uri") String  web_server_redirect_uri,@RequestParam(name="authorities") String  authorities,
