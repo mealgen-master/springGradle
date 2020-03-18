@@ -1,10 +1,17 @@
 package com.springboard.backend.config;
 
 import static java.util.Collections.singletonList;
+import static springfox.documentation.schema.AlternateTypeRules.newRule;
 
+import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.Collections;
 import com.google.common.base.Predicate;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PagedResourcesAssembler;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -14,9 +21,11 @@ import org.springframework.context.annotation.Configuration;
 import com.fasterxml.classmate.TypeResolver;
 
 import io.swagger.models.Contact;
+import org.springframework.web.context.request.async.DeferredResult;
 import springfox.documentation.builders.OAuthBuilder;
 import springfox.documentation.builders.PathSelectors;
 import springfox.documentation.builders.RequestHandlerSelectors;
+import springfox.documentation.schema.WildcardType;
 import springfox.documentation.service.ApiInfo;
 import springfox.documentation.service.AuthorizationScope;
 import springfox.documentation.service.GrantType;
@@ -36,6 +45,12 @@ public class SwaggerConfig {
 
 	@Autowired
 	private TypeResolver typeResolver;
+
+    @Value("${security.oauth2.client.client-id}")
+    private String clientId;
+    @Value("${security.oauth2.client.client-secret}")
+    private String clientSecret;
+
 	
     @Bean
     public Docket api(){
@@ -43,21 +58,21 @@ public class SwaggerConfig {
                 .apis(RequestHandlerSelectors.any())
                 .paths(PathSelectors.ant("/api/**"))
                 .build()
-//                .directModelSubstitute(LocalDate.class, String.class)
-//                .genericModelSubstitutes(ResponseEntity.class)
-//                .alternateTypeRules(
-//                    newRule(typeResolver.resolve(DeferredResult.class,
-//                        typeResolver.resolve(ResponseEntity.class, WildcardType.class)),
-//                        typeResolver.resolve(WildcardType.class)
-//                    ))
-//                .useDefaultResponseMessages(false)
-//                .ignoredParameterTypes(
-//                    Pageable.class,
+                .directModelSubstitute(LocalDate.class, String.class)
+                .genericModelSubstitutes(ResponseEntity.class)
+                .alternateTypeRules(
+                    newRule(typeResolver.resolve(DeferredResult.class,
+                        typeResolver.resolve(ResponseEntity.class, WildcardType.class)),
+                        typeResolver.resolve(WildcardType.class)
+                    ))
+                .useDefaultResponseMessages(false)
+                .ignoredParameterTypes(
+                    Pageable.class,
 //                    PagedResourcesAssembler.class,
-//                    AuthenticationPrincipal.class
-//                )
-//                .securitySchemes(singletonList(securityScheme()))
-//                .securityContexts(singletonList(securityContext()))
+                    AuthenticationPrincipal.class
+                )
+                .securitySchemes(singletonList(securityScheme()))
+                .securityContexts(singletonList(securityContext()))
                 .apiInfo(getApiInfo());
     }
     
@@ -80,8 +95,8 @@ public class SwaggerConfig {
     @Bean
     public SecurityConfiguration securityConfiguration() {
       return SecurityConfigurationBuilder.builder()
-          .clientId("testClientId")
-          .clientSecret("testSecret")
+          .clientId(clientId)
+          .clientSecret(clientSecret)
           .scopeSeparator("password refresh_token client_credentials")
           .useBasicAuthenticationWithAccessCodeGrant(true)
           .build();

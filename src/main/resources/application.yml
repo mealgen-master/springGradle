@@ -23,8 +23,13 @@ security:
       authorization:
          check-token-access: isAuthenticated()
    oauth2:
-      jwt:
-         signkey: 010123@!
+     client.client-id: testClientId
+     client.client-secret: testSecret
+#     resource.token-info-uri: http://192.168.88.133:8780/oauth/check_token
+#     auth-server-uri: http://192.168.88.133:8780
+     jwt:
+      signkey: 010123@!
+
 ## security: JWT 블록 - isAuthenticated() 인증되었는지 여부
 ##---
 
