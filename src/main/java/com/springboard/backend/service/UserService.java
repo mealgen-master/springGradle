@@ -4,6 +4,7 @@ import com.springboard.backend.dto.UsersDTO;
 import com.springboard.backend.model.UserRole;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.springboard.backend.dto.Users;
@@ -20,7 +21,9 @@ public class UserService {
 	
 	@Autowired
 	private UserRepository userRepository;
-	
+
+	@Autowired
+	private PasswordEncoder passwordEncoder;
 	
 	@Autowired
 	private OauthJPARepository oauthJPARepository;
@@ -36,7 +39,7 @@ public class UserService {
 		UserRole userRole = new UserRole();
 		userRole.setRolename(userCreateDto.getRolename());
 		Users users = Users.builder().username(userCreateDto.getUsername())
-				.phonenumber(userCreateDto.getPhonenumber()).address(userCreateDto.getAddress())
+				.phonenumber(passwordEncoder.encode(userCreateDto.getPhonenumber())).address(userCreateDto.getAddress())
 				.address2(userCreateDto.getAddress2()).userRoles(Arrays.asList(userRole)).build();
 		return toResponse(userRepository.save(users));
 	}

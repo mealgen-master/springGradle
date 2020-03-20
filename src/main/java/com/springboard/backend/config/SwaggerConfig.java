@@ -12,6 +12,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PagedResourcesAssembler;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+//import org.springframework.security.oauth2.provider.endpoint.TokenEndpoint;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -22,21 +24,19 @@ import com.fasterxml.classmate.TypeResolver;
 
 import io.swagger.models.Contact;
 import org.springframework.web.context.request.async.DeferredResult;
+import springfox.documentation.builders.AuthorizationCodeGrantBuilder;
 import springfox.documentation.builders.OAuthBuilder;
 import springfox.documentation.builders.PathSelectors;
 import springfox.documentation.builders.RequestHandlerSelectors;
 import springfox.documentation.schema.WildcardType;
-import springfox.documentation.service.ApiInfo;
-import springfox.documentation.service.AuthorizationScope;
-import springfox.documentation.service.GrantType;
-import springfox.documentation.service.ResourceOwnerPasswordCredentialsGrant;
-import springfox.documentation.service.SecurityReference;
-import springfox.documentation.service.SecurityScheme;
+import springfox.documentation.service.*;
 import springfox.documentation.spi.DocumentationType;
 import springfox.documentation.spring.web.plugins.Docket;
 import springfox.documentation.swagger.web.SecurityConfiguration;
 import springfox.documentation.swagger.web.SecurityConfigurationBuilder;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
+
+import javax.validation.Valid;
 
 @Configuration
 @EnableSwagger2
@@ -46,10 +46,17 @@ public class SwaggerConfig {
 	@Autowired
 	private TypeResolver typeResolver;
 
+
+    @Autowired
+    PasswordEncoder passwordEncoder;
+
     @Value("${security.oauth2.client.client-id}")
     private String clientId;
     @Value("${security.oauth2.client.client-secret}")
     private String clientSecret;
+
+    @Value("${security.oauth2.auth-server-uri}")
+    private String authServer;
 
 	
     @Bean
@@ -96,7 +103,9 @@ public class SwaggerConfig {
     public SecurityConfiguration securityConfiguration() {
       return SecurityConfigurationBuilder.builder()
           .clientId(clientId)
-          .clientSecret(clientSecret)
+              .clientSecret(clientSecret)
+//          .clientSecret(passwordEncoder.encode(clientSecret))
+
           .scopeSeparator("password refresh_token client_credentials")
           .useBasicAuthenticationWithAccessCodeGrant(true)
           .build();

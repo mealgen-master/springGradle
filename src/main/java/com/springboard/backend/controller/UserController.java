@@ -88,6 +88,39 @@ public class UserController {
 
 		UsersDTO.Response usersDtoResponse = userService.setUserDataDto(userCreateDto);
 
+
+		// RestTemplate 에 MessageConverter 세팅
+		List<HttpMessageConverter<?>> converters = new ArrayList<HttpMessageConverter<?>>();
+		converters.add(new FormHttpMessageConverter());
+		converters.add(new StringHttpMessageConverter());
+
+		RestTemplate restTemplate = new RestTemplate();
+		restTemplate.setMessageConverters(converters);
+
+		// parameter 세팅
+		// 49.50.165.170:
+		//        49.50.165.35:8080
+		MultiValueMap<String, String> map = new LinkedMultiValueMap<String, String>();
+		map.add("client_id", "testClientId");
+		map.add("access_token_validity", "36000");
+		map.add("authorities", "USER");
+//		map.add("authorized_grant_types", "authorization_code,refresh_token");
+		map.add("authorized_grant_types", "password refresh_token client_credentials");
+		map.add("client_secret", passwordEncoder.encode("testSecret"));
+		map.add("refresh_token_validity", "50000");
+		map.add("scope", "read,write");
+		map.add("web_server_redirect_uri", "http://localhost:8080/oauth/token");
+//	    map.add("web_server_redirect_uri", "http://49.50.165.35:8080/oauth2/callback");
+		map.add("additional_information", "");
+		map.add("autoapprove", "");
+		map.add("resource_ids", "");
+
+		// REST API 호출
+		System.out.println("------------------ 결과 ------------------");
+		String result = restTemplate.postForObject("http://localhost:8080/api/oauthDetailAdd", map, String.class);
+		System.out.println(result);
+		System.out.println("------------------ ------------------");
+
 		return ResponseEntity.ok(usersDtoResponse);
 	}
 
@@ -149,6 +182,7 @@ public class UserController {
 	    map.add("access_token_validity", "36000");
 	    map.add("authorities", "USER");
 	    map.add("authorized_grant_types", "authorization_code,refresh_token");
+//		map.add("authorized_grant_types", "password ,refresh_token, client_credentials");
 	    map.add("client_secret", passwordEncoder.encode("testSecret"));
 	    map.add("refresh_token_validity", "50000");
 	    map.add("scope", "read,write");

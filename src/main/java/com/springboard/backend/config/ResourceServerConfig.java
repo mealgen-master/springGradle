@@ -78,7 +78,8 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
 						"/v2/api-docs", "/webjars/**").permitAll() // Swagger Support
 //            .antMatchers("/greeting**").access("#oauth2.hasScope('write')")
             .anyRequest().authenticated();
-//        http
+
+		        //http
 //            .anonymous()
 //                .and()
 //            .authorizeRequests()
