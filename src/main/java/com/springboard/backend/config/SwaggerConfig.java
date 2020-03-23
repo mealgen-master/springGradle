@@ -4,13 +4,20 @@ import static java.util.Collections.singletonList;
 import static springfox.documentation.schema.AlternateTypeRules.newRule;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.List;
+
 import com.google.common.base.Predicate;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PagedResourcesAssembler;
+import org.springframework.hateoas.client.LinkDiscoverer;
+import org.springframework.hateoas.client.LinkDiscoverers;
+import org.springframework.hateoas.mediatype.collectionjson.CollectionJsonLinkDiscoverer;
 import org.springframework.http.ResponseEntity;
+import org.springframework.plugin.core.SimplePluginRegistry;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 //import org.springframework.security.oauth2.provider.endpoint.TokenEndpoint;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -58,6 +65,13 @@ public class SwaggerConfig {
     @Value("${security.oauth2.auth-server-uri}")
     private String authServer;
 
+    @Bean
+    public LinkDiscoverers discoverers() {
+        List<LinkDiscoverer> plugins = new ArrayList<>();
+        plugins.add(new CollectionJsonLinkDiscoverer());
+        return new LinkDiscoverers(SimplePluginRegistry.create(plugins));
+
+    }
 	
     @Bean
     public Docket api(){
