@@ -48,7 +48,7 @@ public class UserService {
 		UserRole userRole = new UserRole();
 		userRole.setRolename(dtoData.getRolename());
 		Users user = userRepository.findById(id).orElseThrow(() -> new AccountNotFoundException(id.toString()));;
-		user.setPhonenumber(dtoData.getPhonenumber());
+		user.setPhonenumber(passwordEncoder.encode(dtoData.getPhonenumber()));
 		user.setAddress(dtoData.getAddress());
 		user.setAddress2(dtoData.getAddress2());
 		user.setUsername(dtoData.getUsername());

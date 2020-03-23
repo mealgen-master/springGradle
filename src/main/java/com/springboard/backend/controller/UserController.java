@@ -1,5 +1,6 @@
 package com.springboard.backend.controller;
 
+import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -8,14 +9,15 @@ import java.util.List;
 import javax.annotation.Resource;
 import javax.security.auth.login.AccountNotFoundException;
 import javax.validation.Valid;
-import javax.websocket.server.PathParam;
 
 import com.springboard.backend.dto.UsersDTO;
 import io.swagger.annotations.ApiParam;
-import io.swagger.models.auth.In;
+import lombok.RequiredArgsConstructor;
 import org.apache.commons.codec.binary.Base64;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.hateoas.EntityModel;
+import org.springframework.hateoas.MediaTypes;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -41,10 +43,13 @@ import com.springboard.backend.service.UserService;
 
 import io.swagger.annotations.Api;
 
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
+
 @Api(tags = {"유저 API"})
 @RestController
 //@RequestMapping(path = UserController.REQUEST_BASE_PATH)
 //@ControllerAdvice
+@RequiredArgsConstructor
 public class UserController {
 	
 	static final String REQUEST_BASE_PATH = "/api/users";
@@ -66,7 +71,7 @@ public class UserController {
 	
 	@Autowired
     private RestTemplate restTemplate;
-	
+
 	@GetMapping("/api/address")
 	private Iterable<Users> address2(@RequestParam(name="address2") String address) {
 		return userService.selectAllList();
@@ -78,8 +83,10 @@ public class UserController {
 	@Autowired
 	private ModelMapper modelMapper;
 
-	@PostMapping("/api/addUserDTO")
-	private ResponseEntity<UsersDTO.Response> addUserDTO(@RequestBody  @Valid UsersDTO.Create userCreateDto) throws URISyntaxException {
+	private UserResourceAssembler userResourceAssembler = new UserResourceAssembler();
+
+	@PostMapping(path ="/api/addUserDTO",produces = MediaTypes.HAL_JSON_VALUE)
+	public ResponseEntity<EntityModel<UsersDTO.Response>> addUserDTO(@RequestBody  @Valid UsersDTO.Create userCreateDto) throws URISyntaxException {
 		//        Users users = Users.builder() 1. ModelMapper 를 사용하지 않는 방법
 //                .username(userCreateDto.getUsername())
 //                .phonenumber(userCreateDto.getPhonenumber())
@@ -88,6 +95,8 @@ public class UserController {
 
 		UsersDTO.Response usersDtoResponse = userService.setUserDataDto(userCreateDto);
 
+		userResourceAssembler.setType("create");
+		EntityModel<UsersDTO.Response> resource = userResourceAssembler.toModel(usersDtoResponse);
 
 		// RestTemplate 에 MessageConverter 세팅
 		List<HttpMessageConverter<?>> converters = new ArrayList<HttpMessageConverter<?>>();
@@ -121,24 +130,31 @@ public class UserController {
 		System.out.println(result);
 		System.out.println("------------------ ------------------");
 
-		return ResponseEntity.ok(usersDtoResponse);
+		return ResponseEntity.ok(resource);
 	}
 
-	@PutMapping("/api/updateDTO/{id}")
-	private ResponseEntity<UsersDTO.Response> updateUserDTO (@ApiParam(required = true, example = "1") @PathVariable final Integer id, @RequestBody @Valid UsersDTO.Update userDtoUpdate) throws AccountNotFoundException {
+	@PutMapping(path = "/api/updateDTO/{id}" , produces = MediaTypes.HAL_JSON_VALUE)
+	public ResponseEntity<EntityModel<UsersDTO.Response>> updateUserDTO (@ApiParam(required = true, example = "1") @PathVariable final Integer id, @RequestBody @Valid UsersDTO.Update userDtoUpdate) throws AccountNotFoundException {
 		UsersDTO.Response usersDtoResponse = userService.updateUserDto(id ,userDtoUpdate);
+		userResourceAssembler.setType("update");
+		EntityModel<UsersDTO.Response> resource = userResourceAssembler.toModel(usersDtoResponse);
 
-		return ResponseEntity.ok(usersDtoResponse);
+		return ResponseEntity.ok(resource);
 	}
 
-	@GetMapping("/api/selectUserDTO/{id}")
-	private  ResponseEntity<UsersDTO.Response> selectUserDTO(@ApiParam(required = true , example = "1") @PathVariable final  Integer id) {
+//	@GetMapping("/api/selectUserDTO/{id}")
+	@GetMapping(path = "/api/selectUserDTO/{id}", produces = MediaTypes.HAL_JSON_VALUE)
+	public  ResponseEntity<EntityModel<UsersDTO.Response>> selectUserDTO(@ApiParam(required = true , example = "1") @PathVariable final  Integer id) {
 		UsersDTO.Response userDtoResponse = userService.selectUserDTO(id);
-		return ResponseEntity.ok(userDtoResponse);
+		userResourceAssembler.setType("select");
+		EntityModel<UsersDTO.Response> resource = userResourceAssembler.toModel(userDtoResponse);
+
+		return ResponseEntity.ok(resource);
 	}
+
 
 	@DeleteMapping("/api/deleteUserDTO/{id}")
-	private ResponseEntity<?> deleteUserDTO(@ApiParam(required = true, example = "1") @PathVariable final Integer id) {
+	public ResponseEntity<?> deleteUserDTO(@ApiParam(required = true, example = "1") @PathVariable final Integer id) {
 		userService.deleteUserDTO(id);
 		return ResponseEntity.noContent().build();
 	}
@@ -234,10 +250,10 @@ public class UserController {
 	
 	// DB에 address 필드 추가 후 영향성평가? = 어디어디 소스를 고쳐야하는지 파악 && 파라미터로 받아 값 뿌리기
 	@GetMapping("/api/users")
-	public Iterable<Users> selectUsers() {
-		// System.out.print("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
+	public Users selectUsers(Integer id) {
+//		 System.out.print("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
 		//		System.out.print(address2);
-		return userService.selectAllList();
+		return (Users) userService.selectAllList();
 	}
 	
 	

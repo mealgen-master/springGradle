@@ -3,7 +3,7 @@ package com.springboard.backend.dto;
 import com.springboard.backend.model.UserRole;
 import lombok.*;
 import lombok.extern.slf4j.Slf4j;
-
+import org.springframework.hateoas.EntityModel;
 
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
