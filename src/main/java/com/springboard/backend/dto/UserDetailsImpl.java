@@ -3,6 +3,7 @@ package com.springboard.backend.dto;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -25,7 +26,8 @@ public class UserDetailsImpl extends User {
 		// List > ArrayList 하위개념
 		
 		roles.forEach(
-			role -> authorities.add(new SimpleGrantedAuthority(role.getRolename().toString()))
+//			role -> authorities.add(new SimpleGrantedAuthority( "ROLE_"+ role.getRolename()))
+				role -> authorities.add(new SimpleGrantedAuthority( role.getRolename().toString()))
 		);
 		
 //		if(users.isAddress(users.getAddress())) {
@@ -33,6 +35,8 @@ public class UserDetailsImpl extends User {
 //		} else {
 //			authorities.add(new SimpleGrantedAuthority("ROLE_USER"));
 //		}
-		return authorities;
+
+		return roles.stream().map(role -> new SimpleGrantedAuthority( "Role_" + role.getRolename())).collect(Collectors.toSet());
+//		return authorities;
 	}
 }

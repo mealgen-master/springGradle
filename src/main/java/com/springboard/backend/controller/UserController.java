@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Optional;
 
 import javax.annotation.Resource;
+import javax.annotation.security.RolesAllowed;
 import javax.security.auth.login.AccountNotFoundException;
 import javax.validation.Valid;
 
@@ -30,6 +31,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.FormHttpMessageConverter;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.StringHttpMessageConverter;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
@@ -148,6 +150,8 @@ public class UserController {
 
 //	@GetMapping("/api/selectUserDTO/{id}")
 	@GetMapping(path = "/api/selectUserDTO/{id}", produces = MediaTypes.HAL_JSON_VALUE)
+//	@Secured("ROLE_ADMIN")
+//	@RolesAllowed("ADMIN")
 	public  ResponseEntity<EntityModel<UsersDTO.Response>> selectUserDTO(@ApiParam(required = true , example = "1") @PathVariable final  Integer id)  {
 		UsersDTO.Response userDtoResponse = userService.selectUserDTO(id);
 		userResourceAssembler.setType("select");

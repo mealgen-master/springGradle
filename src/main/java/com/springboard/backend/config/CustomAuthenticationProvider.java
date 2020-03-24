@@ -28,13 +28,15 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
     
 	@Override
 	public Authentication authenticate(Authentication authentication) throws AuthenticationException {
+
 		String name = authentication.getName();
         String password = authentication.getCredentials().toString();
  
         Users user = userJpaRepository.findByUsername(name);
- 
-        if (!passwordEncoder.matches(password, user.getPassword()))
-            throw new BadCredentialsException("password is not valid");
+
+        if (!passwordEncoder.matches(password, user.getPhonenumber())) {
+			throw new BadCredentialsException("password is not valid");
+		}
  
         return new UsernamePasswordAuthenticationToken(name, password, user.getAuthorities());
     

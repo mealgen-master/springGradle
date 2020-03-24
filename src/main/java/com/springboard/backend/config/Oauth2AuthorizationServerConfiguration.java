@@ -85,7 +85,6 @@ public class Oauth2AuthorizationServerConfiguration extends AuthorizationServerC
     	JwtAccessTokenConverter converter = new JwtAccessTokenConverter();
     	converter.setKeyPair(keyStoreKeyFactory.getKeyPair("oauth2jwt"));
 //    	converter.setKeyPair(keyStoreKeyFactory.getKeyPair("oauth22jwt"));
-    	System.out.println("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%");
     	return converter;
     }
     
@@ -96,7 +95,7 @@ public class Oauth2AuthorizationServerConfiguration extends AuthorizationServerC
 	public void configure(ClientDetailsServiceConfigurer clients) throws Exception {
 //		clients.jdbc(datasource).passwordEncoder(passwordEncoder);
 		clients.inMemory().withClient("testClientId").secret(passwordEncoder.encode("testSecret"))
-				.redirectUris("http://localhost:8080/oauth/token").authorizedGrantTypes("password").authorities("ADMIN")
+				.redirectUris("http://localhost:8080/oauth/token").authorizedGrantTypes("password")
 				.scopes("read", "write").accessTokenValiditySeconds(30000);
 //		System.out.print(String.format("Client Secret  : %s ", passwordEncoder.encode("testSecret")));
 //		clients.inMemory().withClient("testClientId").secret(passwordEncoder.encode("testSecret"))
@@ -116,7 +115,6 @@ public class Oauth2AuthorizationServerConfiguration extends AuthorizationServerC
 	public void configure(AuthorizationServerEndpointsConfigurer endpoints) throws Exception {
 		
 		Oauth2Config oauth2Config = new Oauth2Config();
-		
 		endpoints.accessTokenConverter(jwtAccessTokenConverter()).userDetailsService(userDetailsServiceImpl).authenticationManager(authenticationManager);
 		/************** Jwt 토큰 발급 ***************/
 //		endpoints.accessTokenConverter(jwtAccessTokenConverter());

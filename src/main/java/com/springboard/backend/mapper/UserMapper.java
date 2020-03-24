@@ -8,7 +8,7 @@ import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;
 
 @Mapper(componentModel = "spring")
-public interface UserMapper extends EntityMapper<UsersDTO.Response , Users>{
+public interface UserMapper extends EntityMapper<UsersDTO.Response, Users> {
 
     UserMapper USER_MAPPER = Mappers.getMapper(UserMapper.class);
 

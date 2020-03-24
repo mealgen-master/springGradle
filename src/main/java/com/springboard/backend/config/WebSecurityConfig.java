@@ -12,14 +12,15 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import com.springboard.backend.service.UserDetailsServiceImpl;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 
 @Configuration
-@EnableGlobalMethodSecurity(securedEnabled = true)
+@EnableGlobalMethodSecurity(securedEnabled = true, jsr250Enabled = true)
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter{
 	
-//	@Autowired
-//	PasswordEncoder passwordEncode;
+	@Autowired
+	PasswordEncoder passwordEncoder;
 	
 	@Autowired
 	UserDetailsServiceImpl userDetailsServiceImpl;
@@ -57,6 +58,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter{
 				.requestMatchers().antMatchers("/oauth/**")
                 .and()
 		        .authorizeRequests().antMatchers("/oauth/**", "/oauth/token", "/oauth2/callback**", "/h2-console/*").permitAll()
+				.anyRequest().authenticated()
 		        .and()
 		        .httpBasic();
 		
