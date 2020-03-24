@@ -40,7 +40,10 @@ public class UserService {
 
 
 	private UsersDTO.Response toResponse(Users users) {
-		return userMapper.toDto(users);
+		//ModelStruct 사용
+		return UserMapper.USER_MAPPER.toDto(users);
+//		return userMapper.toDto(users);
+		//기존 modelMapper 사용
 //		return modelMapper.map(users, UsersDTO.Response.class);
 	}
 
