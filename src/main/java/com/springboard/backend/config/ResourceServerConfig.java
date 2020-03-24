@@ -76,7 +76,7 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
             .antMatchers("/api/users").access("#oauth2.hasScope('read')")
 				.antMatchers("/swagger-resources/**","/swagger-ui.html",
 						"/v2/api-docs", "/webjars/**").permitAll() // Swagger Support
-//				.antMatchers("/api/selectUserDTO/**").hasAnyRole("USER","ADMIN")
+				.antMatchers("/api/selectUserDTO/**").hasAnyRole("USER","ADMIN")
 //            .antMatchers("/greeting**").access("#oauth2.hasScope('write')")
             .anyRequest().authenticated();
 

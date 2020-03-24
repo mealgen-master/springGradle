@@ -78,7 +78,7 @@ public class Users implements UserDetails {
 
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
-		return this.userRoles.stream().map( role -> new  SimpleGrantedAuthority(role.toString())).collect(Collectors.toList());
+		return this.userRoles.stream().map(role -> new SimpleGrantedAuthority( "ROLE_" + role.getRolename())).collect(Collectors.toSet());
 	}
 
 	@JsonProperty(access = JsonProperty.Access.WRITE_ONLY)

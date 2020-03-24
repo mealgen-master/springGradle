@@ -21,22 +21,16 @@ public class UserDetailsImpl extends User {
 	}
 	
 	private static Collection<? extends GrantedAuthority> authorities(List<UserRole> roles) {
-		// 	<> : 제너릭, ? : 타입을 구별하지 않는다.
-		List<GrantedAuthority> authorities = new ArrayList<>(); 
-		// List > ArrayList 하위개념
-		
-		roles.forEach(
-//			role -> authorities.add(new SimpleGrantedAuthority( "ROLE_"+ role.getRolename()))
-				role -> authorities.add(new SimpleGrantedAuthority( role.getRolename().toString()))
-		);
-		
-//		if(users.isAddress(users.getAddress())) {
-//			authorities.add(new SimpleGrantedAuthority("ROLE_ADMIN"));
-//		} else {
-//			authorities.add(new SimpleGrantedAuthority("ROLE_USER"));
-//		}
+//		// 	<> : 제너릭, ? : 타입을 구별하지 않는다.
+//		List<GrantedAuthority> authorities = new ArrayList<>();
+//		// List > ArrayList 하위개념
+//
+//		roles.forEach(
+//				role -> authorities.add(new SimpleGrantedAuthority( role.getRolename().toString()))
+//		);
 
-		return roles.stream().map(role -> new SimpleGrantedAuthority( "Role_" + role.getRolename())).collect(Collectors.toSet());
+
+		return roles.stream().map(role -> new SimpleGrantedAuthority( "ROLE_" + role.getRolename())).collect(Collectors.toSet());
 //		return authorities;
 	}
 }

@@ -151,7 +151,7 @@ public class UserController {
 //	@GetMapping("/api/selectUserDTO/{id}")
 	@GetMapping(path = "/api/selectUserDTO/{id}", produces = MediaTypes.HAL_JSON_VALUE)
 //	@Secured("ROLE_ADMIN")
-//	@RolesAllowed("ADMIN")
+//	@RolesAllowed("ROLE_ADMIN")
 	public  ResponseEntity<EntityModel<UsersDTO.Response>> selectUserDTO(@ApiParam(required = true , example = "1") @PathVariable final  Integer id)  {
 		UsersDTO.Response userDtoResponse = userService.selectUserDTO(id);
 		userResourceAssembler.setType("select");
@@ -257,10 +257,10 @@ public class UserController {
 	
 	// DB에 address 필드 추가 후 영향성평가? = 어디어디 소스를 고쳐야하는지 파악 && 파라미터로 받아 값 뿌리기
 	@GetMapping("/api/users")
-	public Users selectUsers(Integer id) {
+	public Iterable<Users> selectUsers() {
 //		 System.out.print("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
 		//		System.out.print(address2);
-		return (Users) userService.selectAllList();
+		return userService.selectAllList();
 	}
 	
 	
