@@ -5,6 +5,7 @@ import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 import javax.annotation.Resource;
 import javax.security.auth.login.AccountNotFoundException;
@@ -17,7 +18,10 @@ import org.apache.commons.codec.binary.Base64;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.EntityModel;
+import org.springframework.hateoas.Link;
 import org.springframework.hateoas.MediaTypes;
+import org.springframework.hateoas.client.LinkDiscoverer;
+import org.springframework.hateoas.mediatype.hal.HalLinkDiscoverer;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -144,11 +148,10 @@ public class UserController {
 
 //	@GetMapping("/api/selectUserDTO/{id}")
 	@GetMapping(path = "/api/selectUserDTO/{id}", produces = MediaTypes.HAL_JSON_VALUE)
-	public  ResponseEntity<EntityModel<UsersDTO.Response>> selectUserDTO(@ApiParam(required = true , example = "1") @PathVariable final  Integer id) {
+	public  ResponseEntity<EntityModel<UsersDTO.Response>> selectUserDTO(@ApiParam(required = true , example = "1") @PathVariable final  Integer id)  {
 		UsersDTO.Response userDtoResponse = userService.selectUserDTO(id);
 		userResourceAssembler.setType("select");
 		EntityModel<UsersDTO.Response> resource = userResourceAssembler.toModel(userDtoResponse);
-
 		return ResponseEntity.ok(resource);
 	}
 
@@ -168,7 +171,7 @@ public class UserController {
 			@RequestParam(name="rolename") Role rolename
 	) {
 		UserRole userRole = new UserRole();
-		
+
 		// auth.authenticationProvider(authenticationProvider); 으로 인한 BCryptPasswordEncoder 다시 주
 //		BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder(); 
 		

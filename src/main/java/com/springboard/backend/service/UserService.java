@@ -1,9 +1,13 @@
 package com.springboard.backend.service;
 
 import com.springboard.backend.dto.UsersDTO;
+import com.springboard.backend.mapper.UserMapper;
 import com.springboard.backend.model.UserRole;
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.hateoas.Link;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -17,6 +21,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 @Service
+@AllArgsConstructor
 public class UserService {
 	
 	@Autowired
@@ -31,8 +36,12 @@ public class UserService {
 	@Autowired
 	private ModelMapper modelMapper;
 
+	private final UserMapper userMapper;
+
+
 	private UsersDTO.Response toResponse(Users users) {
-		return modelMapper.map(users, UsersDTO.Response.class);
+		return userMapper.toDto(users);
+//		return modelMapper.map(users, UsersDTO.Response.class);
 	}
 
 	public UsersDTO.Response setUserDataDto(UsersDTO.Create userCreateDto) {

@@ -1,5 +1,8 @@
 package com.springboard.backend.config;
 
+import com.springboard.backend.dto.Users;
+import com.springboard.backend.dto.UsersDTO;
+import com.springboard.backend.mapper.UserMapper;
 import org.modelmapper.ModelMapper;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -53,4 +56,5 @@ public class WebMvcConfig implements WebMvcConfigurer {
     public PasswordEncoder passwordEncoder() {
         return PasswordEncoderFactories.createDelegatingPasswordEncoder();
     }
+
 }
