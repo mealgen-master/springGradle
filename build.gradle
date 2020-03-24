@@ -3,7 +3,11 @@ plugins {
 	id 'io.spring.dependency-management' version '1.0.9.RELEASE'
 	id 'java'
 	//id 'war'
+    id 'net.ltgt.apt' version '0.20' // MapStruct
 }
+
+apply plugin: 'net.ltgt.apt-idea' // MapStruct
+//apply plugin: 'net.ltgt.apt-eclipse' // MapStruct
 
 //group = 'com.springboard'
 group = 'com.springboard.backend'
@@ -66,9 +70,10 @@ dependencies {
     //Mapstruct
     // https://mvnrepository.com/artifact/org.mapstruct/mapstruct-processor
     // https://mvnrepository.com/artifact/org.mapstruct/mapstruct
-    compile group: 'org.mapstruct', name: 'mapstruct', version: '1.3.1.Final'
+    implementation group: 'org.mapstruct', name: 'mapstruct', version: '1.3.1.Final'
     compileOnly group: 'org.mapstruct', name: 'mapstruct-processor', version: '1.3.1.Final'
     annotationProcessor group: 'org.mapstruct', name: 'mapstruct-processor', version: '1.3.1.Final'
+    testAnnotationProcessor group: 'org.mapstruct', name: 'mapstruct-processor', version: '1.3.1.Final'
 
     //swagger 적용
     // https://mvnrepository.com/artifact/org.springframework.plugin/spring-plugin-core
@@ -109,6 +114,23 @@ dependencies {
 
 
 
+}
+
+/*
+주석 처리기 옵션을 사용하여 MapStruct 코드 생성기를 구성 할 수 있습니다 .
+javac를 직접 호출 할 때 이러한 옵션은 -Akey = value 형식으로 컴파일러에 전달됩니다 .
+Maven을 통해 MapStruct를 사용하는 options경우 다음과 같이 Maven 프로세서 플러그인 구성 내의 요소를 사용하여 모든 프로세서 옵션을 전달할 수 있습니다 .
+*/
+compileJava {
+    options.compilerArgs = [
+            // If set to true, the creation of a time stamp in the @Generated annotation in the generated mapper classes is suppressed.
+            '-Amapstruct.suppressGeneratorTimestamp=true',
+            /*
+            If set to true, the creation of the comment attribute in the @Generated annotation in the generated mapper classes is suppressed.
+            The comment contains information about the version of MapStruct and about the compiler used for the annotation processing.
+            */
+            '-Amapstruct.suppressGeneratorVersionInfoComment=true'
+    ]
 }
 
 test {
