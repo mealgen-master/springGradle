@@ -5,10 +5,10 @@ server:
 spring:
   datasource:
       drive-class-name: com.mysql.cj.jdbc.Driver
-#      url: jdbc:mysql://localhost:3306/sys?serverTimezone=UTC&characterEncoding=UTF-8
-      url: jdbc:mysql://49.50.165.34:3306/sys?serverTimezone=UTC&characterEncoding=UTF-8
-      username: root
-      password: "`q1w2e3r4t"
+      url: jdbc:mysql://db-3ln28.pub-cdb.ntruss.com:3306/jinheegeneration?serverTimezone=UTC&characterEncoding=UTF-8
+#      url: jdbc:mysql://49.50.165.34:3306/sys?serverTimezone=UTC&characterEncoding=UTF-8
+      username: jinhee
+      password: happymisic1#
   jpa:
     database: mysql
     database-platform: org.hibernate.dialect.MySQL5InnoDBDialect

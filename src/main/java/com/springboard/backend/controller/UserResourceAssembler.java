@@ -37,7 +37,8 @@ public class UserResourceAssembler implements RepresentationModelAssembler<Users
 
         return new EntityModel<>(
                 entity,
-                linkbuilder
+                linkbuilder,
+                linkTo(methodOn(UserController.class).deleteUserDTO(entity.getId())).withRel("delete")
         );
     }
 }

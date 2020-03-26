@@ -15,13 +15,16 @@ import com.springboard.backend.dto.Users;
 import com.springboard.backend.model.OauthClientDetails;
 import com.springboard.backend.repository.OauthJPARepository;
 import com.springboard.backend.repository.UserRepository;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.security.auth.login.AccountNotFoundException;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 
 @Service
 @AllArgsConstructor
+@Transactional(readOnly = true) // readOnly : 수정작업을 방지 한다. 단 UPDATE , DELETE , CREATE 시 예외가 발생한다. <기본적으로 Transaction rollback 기능 수행됨>
 public class UserService {
 	
 	@Autowired
@@ -47,6 +50,7 @@ public class UserService {
 //		return modelMapper.map(users, UsersDTO.Response.class);
 	}
 
+	@Transactional
 	public UsersDTO.Response setUserDataDto(UsersDTO.Create userCreateDto) {
 		UserRole userRole = new UserRole();
 		userRole.setRolename(userCreateDto.getRolename());
@@ -56,6 +60,7 @@ public class UserService {
 		return toResponse(userRepository.save(users));
 	}
 
+	@Transactional
 	public UsersDTO.Response updateUserDto(final Integer id , UsersDTO.Update dtoData) throws AccountNotFoundException {
 		UserRole userRole = new UserRole();
 		userRole.setRolename(dtoData.getRolename());
@@ -72,6 +77,7 @@ public class UserService {
 		return toResponse(userRepository.findById(id).get());
 	}
 
+	@Transactional
 	public void deleteUserDTO(final  Integer id) {
 		userRepository.deleteById(id);
 	}
@@ -80,10 +86,12 @@ public class UserService {
 		return userRepository.findAll();
 	}
 
+	@Transactional
 	public void setUserData(Users user) {
 		userRepository.save(user);
 	}
 
+	@Transactional
 	public void updateUserData(Integer id, String username, String phonenumber, String address, String address2 ) {
 		Users user = userRepository.findById(id).get();
 
@@ -94,7 +102,8 @@ public class UserService {
 		
 		userRepository.save(user);
 	}
-	
+
+	@Transactional
 	public void deleteUserData(Integer id) {
 //		Users user = userRepository.findById(id).get();
 //		userRepository.delete(user);
@@ -104,7 +113,8 @@ public class UserService {
 	public Users selectUserData(Integer id) {
 		return userRepository.findById(id).get();
 	}
-	
+
+	@Transactional
 	public void addOauthCilentDetail(OauthClientDetails oauthClientDetails) {
 		 oauthJPARepository.save(oauthClientDetails);
 	}
