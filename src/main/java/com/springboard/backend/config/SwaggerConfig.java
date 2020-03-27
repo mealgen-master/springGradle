@@ -89,7 +89,7 @@ public class SwaggerConfig {
                 .useDefaultResponseMessages(false)
                 .ignoredParameterTypes(
                     Pageable.class,
-//                    PagedResourcesAssembler.class,
+                    PagedResourcesAssembler.class,
                     AuthenticationPrincipal.class
                 )
                 .securitySchemes(singletonList(securityScheme()))

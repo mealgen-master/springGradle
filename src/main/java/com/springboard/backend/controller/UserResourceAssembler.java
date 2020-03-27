@@ -18,7 +18,7 @@ public class UserResourceAssembler implements RepresentationModelAssembler<Users
 
     @Setter
     @Getter
-    private String type;
+    private String type = "";
 
     @SneakyThrows
     @Override

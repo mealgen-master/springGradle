@@ -81,7 +81,7 @@ public class Users implements UserDetails {
 		return this.userRoles.stream().map(role -> new SimpleGrantedAuthority( "ROLE_" + role.getRolename())).collect(Collectors.toSet());
 	}
 
-	@JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+	@JsonProperty(access = JsonProperty.Access.READ_ONLY)
 	@Override
 	public String getUsername() {
 		return this.username;
@@ -111,7 +111,7 @@ public class Users implements UserDetails {
 		return true;
 	}
 
-	@JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+	@JsonProperty(access = JsonProperty.Access.READ_ONLY)
 	@Override
 	public String getPassword() {
 		return this.phonenumber;

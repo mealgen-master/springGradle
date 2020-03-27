@@ -3,10 +3,14 @@ package com.springboard.backend.service;
 import com.springboard.backend.dto.UsersDTO;
 import com.springboard.backend.mapper.UserMapper;
 import com.springboard.backend.model.UserRole;
+import com.springboard.backend.repository.UserJpaRepository;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.hateoas.Link;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -21,6 +25,8 @@ import javax.security.auth.login.AccountNotFoundException;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
@@ -41,6 +47,9 @@ public class UserService {
 
 	private final UserMapper userMapper;
 
+	@Autowired
+	private UserJpaRepository userJpaRepository;
+
 
 	private UsersDTO.Response toResponse(Users users) {
 		//ModelStruct 사용
@@ -48,6 +57,13 @@ public class UserService {
 //		return userMapper.toDto(users);
 		//기존 modelMapper 사용
 //		return modelMapper.map(users, UsersDTO.Response.class);
+	}
+
+	public Page<UsersDTO.Response>  pageFind(Pageable pageable) {
+		Page<Users> page = userJpaRepository.findAll(pageable);
+		List<UsersDTO.Response> content = page.getContent().stream().map(user -> toResponse(user)).collect(Collectors.toList());
+
+		return new PageImpl<>(content, pageable , page.getTotalElements());
 	}
 
 	@Transactional
