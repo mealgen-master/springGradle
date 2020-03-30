@@ -12,6 +12,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.hateoas.Link;
+import org.springframework.security.authentication.AuthenticationCredentialsNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -57,6 +58,34 @@ public class UserService {
 //		return userMapper.toDto(users);
 		//기존 modelMapper 사용
 //		return modelMapper.map(users, UsersDTO.Response.class);
+	}
+
+	@Transactional
+	public UsersDTO.Response addRole(UsersDTO.Role dto) {
+		Users user = userJpaRepository.findByUsername(dto.getUsername()).orElseThrow(() -> new AuthenticationCredentialsNotFoundException(
+				"Authentication credentials not found exception " + dto.getUsername()
+		));
+		List<UserRole> roles = user.getUserRoles();
+		UserRole role = new UserRole();
+		role.setRolename(dto.getRole());
+		roles.add(role);
+		return toResponse(user);
+	}
+
+	@Transactional
+	public UsersDTO.Response resetPassword(UsersDTO.Reset dto) {
+		Users user = userJpaRepository.findByUsername(dto.getUsername()).orElseThrow(() -> new AuthenticationCredentialsNotFoundException(
+				"Authentication credentials not found exception " + dto.getUsername()
+		));
+		user.setPhonenumber(passwordEncoder.encode(dto.getPhonenumber()));
+		userJpaRepository.save(user);
+		return toResponse(user);
+	}
+
+	public UsersDTO.Response findName(String username) {
+		Users user = userJpaRepository.findByUsername(username).orElseThrow(() -> new AuthenticationCredentialsNotFoundException(
+				"Authentication credentials not found exception " + username));
+		return toResponse(user);
 	}
 
 	public Page<UsersDTO.Response>  pageFind(Pageable pageable) {

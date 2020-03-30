@@ -1,5 +1,6 @@
 package com.springboard.backend.service;
 
+import org.springframework.security.authentication.AuthenticationCredentialsNotFoundException;
 import org.springframework.stereotype.Service;
 
 import com.springboard.backend.dto.UserDetailsImpl;
@@ -25,7 +26,8 @@ public class UserDetailsServiceImpl implements UserDetailsService{
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 //		UserJpaRepository jparepo = getUserJapRepository();
 //		Users users = jparepo.findByUsername(username);
-		Users users = userJpaRepository.findByUsername(username);
+		Users users = userJpaRepository.findByUsername(username).orElseThrow(() -> new AuthenticationCredentialsNotFoundException(
+				"Authentication credentials not found exception " + username));
 		// users의 값을 findByUsername에 넣어서 결과값을 보내준다.
 		
 		if( users == null ) {

@@ -31,6 +31,9 @@ public class UserResourceAssembler implements RepresentationModelAssembler<Users
             case "create" :
                 linkbuilder = linkTo(methodOn(UserController.class).addUserDTO(UsersDTO.Create.builder().build())).withRel("create");
                 break;
+            case "find" :
+                linkbuilder = linkTo(methodOn(UserController.class).findName(entity.getUsername())).withSelfRel();
+                break;
             default :
                 linkbuilder = linkTo(methodOn(UserController.class).selectUserDTO(entity.getId())).withSelfRel();
         }

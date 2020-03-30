@@ -14,6 +14,7 @@ import javax.validation.Valid;
 
 import com.springboard.backend.common.infra.ApiPageable;
 import com.springboard.backend.dto.UsersDTO;
+import com.springboard.backend.mapper.UserMapper;
 import io.swagger.annotations.ApiParam;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.codec.binary.Base64;
@@ -39,6 +40,8 @@ import org.springframework.http.converter.FormHttpMessageConverter;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.StringHttpMessageConverter;
 import org.springframework.security.access.annotation.Secured;
+import org.springframework.security.authentication.AuthenticationCredentialsNotFoundException;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
@@ -97,6 +100,35 @@ public class UserController {
 	private ModelMapper modelMapper;
 
 	private UserResourceAssembler userResourceAssembler = new UserResourceAssembler();
+
+	@PostMapping("/api/addRole")
+	public ResponseEntity<UsersDTO.Response> addRole(UsersDTO.Role dto) {
+		UsersDTO.Response user = userService.addRole(dto);
+		return ResponseEntity.ok(user);
+	}
+
+	@GetMapping("/api/authentication")
+	public ResponseEntity<UsersDTO.Response> getAuthentication(@AuthenticationPrincipal String username) {
+		Users user = userJpaRepository.findByUsername(username).orElseThrow(() -> new AuthenticationCredentialsNotFoundException(
+				"Authentication credentials not found exception " + username));
+		return ResponseEntity.ok(UserMapper.USER_MAPPER.usersToDto(user));
+	}
+
+	@GetMapping("/api/findName")
+	public ResponseEntity<EntityModel<UsersDTO.Response>> findName(@RequestParam String username) {
+		UsersDTO.Response user = userService.findName(username);
+		userResourceAssembler.setType("find");
+		EntityModel<UsersDTO.Response> resource = userResourceAssembler.toModel(user);
+		return ResponseEntity.ok(resource);
+	}
+
+	@PutMapping("/api/resetPassword")
+	public ResponseEntity<UsersDTO.Response> resetPassword(@RequestBody UsersDTO.Reset dto) {
+		UsersDTO.Response user = userService.resetPassword(dto);
+
+		return  ResponseEntity.ok(user);
+	}
+
 
 	@PostMapping(path ="/api/addUserDTO",produces = MediaTypes.HAL_JSON_VALUE)
 	public ResponseEntity<EntityModel<UsersDTO.Response>> addUserDTO(@RequestBody  @Valid UsersDTO.Create userCreateDto) throws URISyntaxException {
@@ -181,7 +213,7 @@ public class UserController {
 		return pagedResourcesAssembler.toModel(pageusers,userResourceAssembler);
 
 	}
-	
+
 	@GetMapping("/api/addUser")
 	private ResponseEntity<?> addUser(
 			@RequestParam(name="username") String username,

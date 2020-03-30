@@ -11,7 +11,7 @@ import com.springboard.backend.dto.Users;
 
 
 public interface UserJpaRepository extends JpaRepository<Users, Integer> {
-	// Optional<Users> findByUsername(String username);
+	 Optional<Users> findByUsername(String username);
 	// Users 객체가 들어오거나 Null 이거나
-	Users findByUsername(String username);
+//	Users findByUsername(String username);
 }

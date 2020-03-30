@@ -72,7 +72,7 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
     public void configure(HttpSecurity http) throws Exception {
     	http.headers().frameOptions().disable();
         http.authorizeRequests()
-        	.antMatchers("/oauth/**", "/oauth2/**", "/h2-console/*","/api/addUser**","/api/oauthDetailAdd**","/","/greeting**").permitAll()
+        	.antMatchers("/oauth/**", "/oauth2/**", "/h2-console/*","/api/addUser**","/api/oauthDetailAdd**","/","/greeting**","/api/authentication**").permitAll()
             .antMatchers("/api/users").access("#oauth2.hasScope('read')")
 				.antMatchers("/swagger-resources/**","/swagger-ui.html",
 						"/v2/api-docs", "/webjars/**").permitAll() // Swagger Support

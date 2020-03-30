@@ -1,6 +1,7 @@
 package com.springboard.backend.config;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.AuthenticationCredentialsNotFoundException;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -32,7 +33,8 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
 		String name = authentication.getName();
         String password = authentication.getCredentials().toString();
  
-        Users user = userJpaRepository.findByUsername(name);
+        Users user = userJpaRepository.findByUsername(name).orElseThrow(() -> new AuthenticationCredentialsNotFoundException(
+				"Authentication credentials not found exception " + name));
 
         if (!passwordEncoder.matches(password, user.getPhonenumber())) {
 			throw new BadCredentialsException("password is not valid");
