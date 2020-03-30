@@ -12,12 +12,19 @@ import javax.annotation.security.RolesAllowed;
 import javax.security.auth.login.AccountNotFoundException;
 import javax.validation.Valid;
 
+import com.springboard.backend.common.infra.ApiPageable;
 import com.springboard.backend.dto.UsersDTO;
 import io.swagger.annotations.ApiParam;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.codec.binary.Base64;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
+import org.springframework.data.web.PagedResourcesAssembler;
+import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.Link;
 import org.springframework.hateoas.MediaTypes;
@@ -164,6 +171,15 @@ public class UserController {
 	public ResponseEntity<?> deleteUserDTO(@ApiParam(required = true, example = "1") @PathVariable final Integer id) {
 		userService.deleteUserDTO(id);
 		return ResponseEntity.noContent().build();
+	}
+
+	@ApiPageable
+	@GetMapping("/api/pageUsers")
+	public CollectionModel<EntityModel<UsersDTO.Response>> getUsers(@PageableDefault Pageable pageable,
+																	PagedResourcesAssembler<UsersDTO.Response> pagedResourcesAssembler) {
+		Page<UsersDTO.Response> pageusers = userService.pageFind(pageable);
+		return pagedResourcesAssembler.toModel(pageusers,userResourceAssembler);
+
 	}
 	
 	@GetMapping("/api/addUser")
