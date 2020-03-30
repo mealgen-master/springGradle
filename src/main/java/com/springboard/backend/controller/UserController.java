@@ -101,6 +101,13 @@ public class UserController {
 
 	private UserResourceAssembler userResourceAssembler = new UserResourceAssembler();
 
+	@PutMapping("/api/deleteRole")
+	public ResponseEntity<UsersDTO.Response> deleteRole(UsersDTO.Role dto) {
+		UsersDTO.Response user = userService.deleteRole(dto);
+
+		return ResponseEntity.ok(user);
+	}
+
 	@PostMapping("/api/addRole")
 	public ResponseEntity<UsersDTO.Response> addRole(UsersDTO.Role dto) {
 		UsersDTO.Response user = userService.addRole(dto);

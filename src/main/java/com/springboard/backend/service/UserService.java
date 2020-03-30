@@ -26,6 +26,7 @@ import javax.security.auth.login.AccountNotFoundException;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Iterator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -69,6 +70,20 @@ public class UserService {
 		UserRole role = new UserRole();
 		role.setRolename(dto.getRole());
 		roles.add(role);
+		return toResponse(user);
+	}
+
+	@Transactional
+	public UsersDTO.Response deleteRole(UsersDTO.Role dto) {
+		Users user = userJpaRepository.findByUsername(dto.getUsername()).orElseThrow(() -> new AuthenticationCredentialsNotFoundException(
+				"Authentication credentials not found exception " + dto.getUsername() ));
+		List<UserRole> roles = user.getUserRoles();
+		Iterator<UserRole> iter = roles.iterator();
+		while(iter.hasNext()) {
+			if(dto.getRole().equals(iter.next().getRolename())) {
+				iter.remove();
+			}
+		}
 		return toResponse(user);
 	}
 
