@@ -18,6 +18,10 @@ spring:
       format_sql: true
 #      ddl-auto: validate
       ddl-auto: update
+  servlet:
+    multipart:
+      max-file-size: 30MB
+      max-request-size: 30MB
 security:
    oauth:
       authorization:
@@ -29,6 +33,14 @@ security:
      auth-server-uri: http://localhost:8080
      jwt:
       signkey: 010123@!
+
+file:
+  extension-convert: /usr/local/bin/convert
+  extension-composite: /usr/local/bin/composite
+
+storeage:
+  location: /Users/taehong/downloadfiles
+
 
 ## security: JWT 블록 - isAuthenticated() 인증되었는지 여부
 ##---

@@ -1,8 +1,11 @@
 package com.springboard.backend.config;
 
+import com.springboard.backend.controller.FileResourceAssembler;
 import com.springboard.backend.dto.Users;
 import com.springboard.backend.dto.UsersDTO;
 import com.springboard.backend.mapper.UserMapper;
+import com.springboard.backend.properties.StorageProperties;
+import com.springboard.backend.service.FileService;
 import org.modelmapper.ModelMapper;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -56,5 +59,8 @@ public class WebMvcConfig implements WebMvcConfigurer {
     public PasswordEncoder passwordEncoder() {
         return PasswordEncoderFactories.createDelegatingPasswordEncoder();
     }
+
+    @Bean
+    public FileResourceAssembler fileResourceAssembler() { return new FileResourceAssembler();}
 
 }

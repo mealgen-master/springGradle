@@ -64,6 +64,10 @@ sourceSets {
 
 dependencies {
 
+    //cusmProperties 사용모듈
+    annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
+    testAnnotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
+
     // EnversRevisionRepositoryFactoryBean 사용
     // https://mvnrepository.com/artifact/org.springframework.data/spring-data-envers
     compile group: 'org.springframework.data', name: 'spring-data-envers', version: '2.2.5.RELEASE'

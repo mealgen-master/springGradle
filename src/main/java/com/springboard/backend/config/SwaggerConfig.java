@@ -10,9 +10,12 @@ import java.util.Collections;
 import java.util.List;
 
 import com.google.common.base.Predicate;
+import com.springboard.backend.dto.FileDTO;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PagedResourcesAssembler;
+import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.client.LinkDiscoverer;
 import org.springframework.hateoas.client.LinkDiscoverers;
 import org.springframework.hateoas.mediatype.collectionjson.CollectionJsonLinkDiscoverer;
@@ -21,6 +24,7 @@ import org.springframework.plugin.core.SimplePluginRegistry;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 //import org.springframework.security.oauth2.provider.endpoint.TokenEndpoint;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.oauth2.provider.OAuth2Authentication;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -45,6 +49,7 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
 import javax.validation.Valid;
 
+@RequiredArgsConstructor
 @Configuration
 @EnableSwagger2
 @ComponentScan(basePackages = "com.springboard.backend")
@@ -75,7 +80,7 @@ public class SwaggerConfig {
 	
     @Bean
     public Docket api(){
-        return new Docket(DocumentationType.SWAGGER_2).select()
+        return new Docket(DocumentationType.SWAGGER_2).host("localhost:8080").select()
                 .apis(RequestHandlerSelectors.any())
                 .paths(PathSelectors.ant("/api/**"))
                 .build()
@@ -90,7 +95,8 @@ public class SwaggerConfig {
                 .ignoredParameterTypes(
                     Pageable.class,
                     PagedResourcesAssembler.class,
-                    AuthenticationPrincipal.class
+                    AuthenticationPrincipal.class,
+                        OAuth2Authentication.class
                 )
                 .securitySchemes(singletonList(securityScheme()))
                 .securityContexts(singletonList(securityContext()))
@@ -118,8 +124,6 @@ public class SwaggerConfig {
       return SecurityConfigurationBuilder.builder()
           .clientId(clientId)
               .clientSecret(clientSecret)
-//          .clientSecret(passwordEncoder.encode(clientSecret))
-
           .scopeSeparator("password refresh_token client_credentials")
           .useBasicAuthenticationWithAccessCodeGrant(true)
           .build();

@@ -59,12 +59,8 @@ import com.springboard.backend.service.UserService;
 
 import io.swagger.annotations.Api;
 
-import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
-
 @Api(tags = {"유저 API"})
 @RestController
-//@RequestMapping(path = UserController.REQUEST_BASE_PATH)
-//@ControllerAdvice
 @RequiredArgsConstructor
 public class UserController {
 	
