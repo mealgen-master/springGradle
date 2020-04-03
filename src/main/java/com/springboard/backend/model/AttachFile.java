@@ -1,12 +1,15 @@
 package com.springboard.backend.model;
 
 import lombok.*;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.hibernate.annotations.CreationTimestamp;
+import org.springframework.http.MediaType;
 
 import javax.persistence.*;
 import java.util.Date;
 
+@Slf4j
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
@@ -50,6 +53,28 @@ public class AttachFile {
             return filename.substring(filename.lastIndexOf(".") + 1);
         }
         return StringUtils.EMPTY;
+    }
+
+    public boolean isGif() {
+        return getMediaType().equals(MediaType.IMAGE_GIF);
+    }
+
+    public boolean isVideo() {
+        return getMediaType().getType().startsWith("video");
+    }
+
+    public MediaType getMediaType() {
+        MediaType mediaType = null;
+        try {
+            mediaType = MediaType.parseMediaType(this.contentType);
+        } catch (Exception e) {
+            log.error("Fail parse media type");
+        }
+
+        if (mediaType == null) {
+            mediaType = MediaType.APPLICATION_OCTET_STREAM;
+        }
+        return mediaType;
     }
 
 }

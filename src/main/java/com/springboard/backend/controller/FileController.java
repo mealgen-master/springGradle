@@ -40,7 +40,8 @@ public class FileController {
     private FileResourceAssembler fileResourceAssembler;
 
 
-    @ApiOperation(value = "파일 업로드" , consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+//    @ApiOperation(value = "파일 업로드" , consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @ApiOperation(value = "FIle Upload" , consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<EntityModel<FileDTO.Response>> uploadFile(@ApiParam(value = "Select te file to Upload")MultipartFile file) throws FileUploadException {
         return ResponseEntity.ok(fileResourceAssembler.toModel(fileService.storeFile(file)));
@@ -62,7 +63,8 @@ public class FileController {
                 .collect(Collectors.toList()));
     }
 
-    @ApiOperation(value = "파일 다운로드")
+//    @ApiOperation(value = "파일 다운로드")
+    @ApiOperation(value = "File Download")
     @GetMapping("/{id}")
     public ResponseEntity<Resource> downloadFile(@PathVariable final Long id) throws FileNotFoundException {
         AttachFile attachFile = fileService.loadFile(id);
@@ -71,5 +73,20 @@ public class FileController {
                 .header(HttpHeaders.CONTENT_DISPOSITION,"attachment; filename=\"" + attachFile.getFilename() + "\"")
                 .header(HttpHeaders.ACCEPT_CHARSET, StandardCharsets.UTF_8.toString())
                 .body(new ByteArrayResource(attachFile.getData()));
+    }
+
+    @ApiOperation(value = "이미지 편집 다운로드")
+    @GetMapping("/{id}/thumb")
+    public ResponseEntity<Resource> downloadFile(@PathVariable("id") Long id, @ApiParam(example = "200") @RequestParam(value = "w", required = false) long width,
+                                                 @ApiParam(example = "200") @RequestParam(value = "h", required = false) long height,
+                                                 @ApiParam(example = "crop") @RequestParam(value = "t", required = false, defaultValue = "crop") String type) {
+        FileDTO.Download download = fileService.loadFile(id,width,height,type);
+        Resource resource = download.getResource();
+        FileDTO.Response attachFile = download.getAttachFile();
+
+        return ResponseEntity.ok()
+                .contentType(MediaType.parseMediaType(attachFile.getContentType()))
+                .header(HttpHeaders.CONTENT_DISPOSITION,"inline; filename=\"" + resource.getFilename() + "\"")
+                .body(resource);
     }
 }

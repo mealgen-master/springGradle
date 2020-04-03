@@ -4,6 +4,7 @@ package com.springboard.backend.dto;
 import com.springboard.backend.model.UserRole;
 import lombok.*;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.core.io.Resource;
 
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
@@ -35,13 +36,26 @@ public class FileDTO {
         @NotEmpty
         private String contentType;
 
-        //        @NotNull
         private Long size;
 
 //        private byte[] data;
 
-        //        @NotNull
+
         private Date insertDate;
+    }
+
+    @Getter
+    @Setter
+    @NoArgsConstructor
+    @AllArgsConstructor
+    @ToString
+    @Builder
+    public static class Download {
+
+        private Response attachFile;
+
+        private Resource resource;
+
     }
 
 }
